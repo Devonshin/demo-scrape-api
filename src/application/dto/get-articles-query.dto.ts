@@ -15,7 +15,7 @@ export class GetArticlesQueryDto {
    * 페이지 번호 (1부터 시작)
    */
   @ApiProperty({
-    description: '페이지 번호 (1부터 시작)',
+    description: 'Page number (starting from 1)',
     example: 1,
     required: false,
     default: 1,
@@ -31,7 +31,7 @@ export class GetArticlesQueryDto {
    * 페이지당 아이템 수
    */
   @ApiProperty({
-    description: '페이지당 아이템 수',
+    description: 'Number of items per page',
     example: 20,
     required: false,
     default: 20,
@@ -49,7 +49,7 @@ export class GetArticlesQueryDto {
    * 소스 ID 필터
    */
   @ApiProperty({
-    description: '특정 소스의 기사만 조회',
+    description: 'View only articles from specific sources',
     example: '123e4567-e89b-12d3-a456-426614174000',
     required: false,
   })
@@ -61,8 +61,8 @@ export class GetArticlesQueryDto {
    * 제목 전문검색 키워드
    */
   @ApiProperty({
-    description: '제목 전문검색 키워드 (article_indexes 테이블 활용)',
-    example: 'AI 기술',
+    description: 'Title full-text search keyword (using article_indexes table)',
+    example: 'FontNinja',
     required: false,
   })
   @IsOptional()
@@ -73,7 +73,7 @@ export class GetArticlesQueryDto {
    * 발행일 이후 (이 날짜 포함)
    */
   @ApiProperty({
-    description: '발행일 이후 (이 날짜 포함)',
+    description: 'After the date of publication (including this date)',
     example: '2025-01-01',
     required: false,
   })
@@ -85,7 +85,7 @@ export class GetArticlesQueryDto {
    * 발행일 이전 (이 날짜 포함)
    */
   @ApiProperty({
-    description: '발행일 이전 (이 날짜 포함)',
+    description: 'Before the date of publication (including this date)',
     example: '2025-12-31',
     required: false,
   })
@@ -97,7 +97,7 @@ export class GetArticlesQueryDto {
    * 정렬 필드
    */
   @ApiProperty({
-    description: '정렬 기준 필드',
+    description: 'Sort by field',
     example: 'publicationDate',
     required: false,
     default: 'publicationDate',
@@ -112,7 +112,7 @@ export class GetArticlesQueryDto {
    * 정렬 순서
    */
   @ApiProperty({
-    description: '정렬 순서',
+    description: 'SORT ORDER',
     example: 'DESC',
     required: false,
     default: 'DESC',

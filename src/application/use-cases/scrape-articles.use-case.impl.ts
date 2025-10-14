@@ -3,17 +3,13 @@
  * @date 2025-10-13
  * Implémentation du cas d’utilisation de scraping d’articles
  */
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import {
-  IScrapeArticlesUseCase,
-  ScrapeArticlesCommand,
-  ScrapeResultSummary,
-} from '../ports/in/scrape-articles.use-case';
-import { IArticleRepository } from '../../domain/repositories/article.repository.interface';
-import { ISourceRepository } from '../../domain/repositories/source.repository.interface';
-import { IScraperPort } from '../ports/out/scraper.port';
-import { ArticleDomain } from '../../domain/entities/article.domain';
-import { v4 as uuidv4 } from 'uuid';
+import {Inject, Injectable, Logger, NotFoundException} from '@nestjs/common';
+import {IScrapeArticlesUseCase, ScrapeResultSummary,} from '../ports/in/scrape-articles.use-case';
+import {IArticleRepository} from '../../domain/repositories/article.repository.interface';
+import {ISourceRepository} from '../../domain/repositories/source.repository.interface';
+import {IScraperPort} from '../ports/out/scraper.port';
+import {ArticleDomain} from '../../domain/entities/article.domain';
+import {v4 as uuidv4} from 'uuid';
 import {ScrapeRequestDto} from "../dto/scrape-request.dto";
 
 /**

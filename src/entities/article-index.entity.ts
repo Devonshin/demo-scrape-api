@@ -3,8 +3,8 @@
  * @date 2025-10-13
  * ArticleIndex 엔티티 - 기사 제목의 단어별 검색 인덱스를 저장하는 테이블
  */
-import { Table, Column, Model, DataType, ForeignKey, BelongsTo, CreatedAt } from 'sequelize-typescript';
-import { Article } from './article.entity';
+import {BelongsTo, Column, CreatedAt, DataType, ForeignKey, Model, Table} from 'sequelize-typescript';
+import {Article} from './article.entity';
 import {bufferToUuid, uuidToBuffer} from "../common/utils/uuid.util";
 
 /**
@@ -47,7 +47,7 @@ export class ArticleIndex extends Model {
   /** 기사 외래 키 */
   @ForeignKey(() => Article)
   @Column({
-    type: DataType.BLOB,
+    type: 'BINARY(16)',
     allowNull: false,
     get() {
       const rawValue = this.getDataValue('articleId') as Buffer;

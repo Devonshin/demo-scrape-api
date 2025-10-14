@@ -3,7 +3,7 @@
  * @date 2025-10-13
  * 기사 조회 Use Case 인터페이스 - 인바운드 포트
  */
-import { ArticleDomain } from '../../../domain/entities/article.domain';
+import {ArticleDomain} from '../../../domain/entities/article.domain';
 
 /**
  * 기사 조회 쿼리 DTO

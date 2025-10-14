@@ -3,11 +3,10 @@
  * @date 2025-10-13
  * Module Base de Données - configuration de la connexion Sequelize et enregistrement des entités
  */
-import {Module, OnModuleInit} from '@nestjs/common';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { Source, SourceTag, Article, ArticleIndex } from '../entities/entity.module';
-import {Sequelize} from "sequelize";
+import {Module} from '@nestjs/common';
+import {SequelizeModule} from '@nestjs/sequelize';
+import {ConfigModule, ConfigService} from '@nestjs/config';
+import {Article, ArticleIndex, Source, SourceTag} from '../entities/entity.module';
 
 /**
  * Module de base de données

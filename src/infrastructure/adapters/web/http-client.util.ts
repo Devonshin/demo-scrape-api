@@ -3,7 +3,7 @@
  * @date 2025-10-13
  * HTTP 클라이언트 유틸리티 - Rate limiting 및 재시도 로직 포함
  */
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, {AxiosInstance, AxiosRequestConfig} from 'axios';
 
 /**
  * HTTP 클라이언트 설정 옵션

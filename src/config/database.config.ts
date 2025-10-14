@@ -3,8 +3,8 @@
  * @date 2025-10-13
  * 데이터베이스 설정 - Sequelize ORM 연결을 위한 설정
  */
-import { ConfigService } from '@nestjs/config';
-import { SequelizeModuleOptions } from '@nestjs/sequelize';
+import {ConfigService} from '@nestjs/config';
+import {SequelizeModuleOptions} from '@nestjs/sequelize';
 
 /**
  * Sequelize 데이터베이스 설정을 생성하는 팩토리 함수

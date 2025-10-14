@@ -5,12 +5,12 @@
  * - Use Case 계층의 비즈니스 로직 테스트
  */
 
-import { Test, TestingModule } from '@nestjs/testing';
-import { GetArticlesUseCaseImpl } from './get-articles.use-case.impl';
-import { IArticleRepository, PaginatedArticles } from '../../domain/repositories/article.repository.interface';
-import { GetArticlesQuery } from '../ports/in/get-articles.use-case';
-import { ArticleDomain } from '../../domain/entities/article.domain';
-import { v4 as uuidv4 } from 'uuid';
+import {Test, TestingModule} from '@nestjs/testing';
+import {GetArticlesUseCaseImpl} from './get-articles.use-case.impl';
+import {IArticleRepository, PaginatedArticles} from '../../domain/repositories/article.repository.interface';
+import {GetArticlesQuery} from '../ports/in/get-articles.use-case';
+import {ArticleDomain} from '../../domain/entities/article.domain';
+import {v4 as uuidv4} from 'uuid';
 
 describe('GetArticlesUseCaseImpl', () => {
   let useCase: GetArticlesUseCaseImpl;
@@ -300,7 +300,7 @@ describe('GetArticlesUseCaseImpl', () => {
       // Given: publishedAfter만 설정 (7일 전)
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-      
+
       const query: GetArticlesQuery = {
         publishedAfter: sevenDaysAgo,
       };

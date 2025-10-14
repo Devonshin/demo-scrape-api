@@ -3,8 +3,8 @@
  * @date 2025-10-13
  * DTO de demande de scraping
  */
-import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, IsBoolean, IsDateString } from 'class-validator';
+import {ApiProperty} from '@nestjs/swagger';
+import {IsOptional, IsString} from 'class-validator';
 
 /**
  * DTO de requête POST /scrape

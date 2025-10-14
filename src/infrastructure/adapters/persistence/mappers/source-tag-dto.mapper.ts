@@ -3,8 +3,8 @@
  * @date 2025-01-13
  * SourceTag DTO Mapper - Domain ↔ DTO 변환
  */
-import { SourceTagDomain } from '../../../../domain/entities/source-tag.domain';
-import { SourceTagResponseDto } from '../../../../application/dto/source-tag.dto';
+import {SourceTagDomain} from '../../../../domain/entities/source-tag.domain';
+import {SourceTagResponseDto} from '../../../../application/dto/source-tag.dto';
 
 /**
  * SourceTag DTO Mapper

@@ -3,8 +3,8 @@
  * @date 2025-10-13
  * DTO de pagination - logique de pagination commune
  */
-import { IsOptional, IsInt, Min, Max } from 'class-validator';
-import { Type } from 'class-transformer';
+import {IsInt, IsOptional, Max, Min} from 'class-validator';
+import {Type} from 'class-transformer';
 
 /**
  * DTO de requête de pagination

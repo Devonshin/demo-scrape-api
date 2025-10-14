@@ -3,9 +3,9 @@
  * @date 2025-10-13
  * Source 엔티티 - 뉴스 소스 정보를 저장하는 테이블
  */
-import { Table, Column, Model, DataType, HasMany, CreatedAt, UpdatedAt } from 'sequelize-typescript';
-import { Article } from './article.entity';
-import { SourceTag } from './source-tag.entity';
+import {Column, CreatedAt, DataType, HasMany, Model, Table, UpdatedAt} from 'sequelize-typescript';
+import {Article} from './article.entity';
+import {SourceTag} from './source-tag.entity';
 import {bufferToUuid, uuidToBuffer} from "../common/utils/uuid.util";
 
 /**
@@ -21,7 +21,7 @@ import {bufferToUuid, uuidToBuffer} from "../common/utils/uuid.util";
 export class Source extends Model {
   /** UUID 기본 키 */
   @Column({
-    type: DataType.BLOB,
+    type: 'BINARY(16)',
     primaryKey: true,
     get() {
       const rawValue = this.getDataValue('id') as Buffer;

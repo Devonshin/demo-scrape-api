@@ -3,7 +3,7 @@
  * @date 2025-01-13
  * Interface du cas d’usage de gestion des balises de source
  */
-import { SourceTagDomain } from '../../../domain/entities/source-tag.domain';
+import {SourceTagDomain} from '../../../domain/entities/source-tag.domain';
 
 /**
  * Commande de création de balise de source

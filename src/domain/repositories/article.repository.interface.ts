@@ -3,8 +3,8 @@
  * @date 2025-10-13
  * Article 리포지토리 인터페이스 - 도메인 계층에서 정의하는 영속성 계약
  */
-import { ArticleDomain } from '../entities/article.domain';
-import { Transaction } from 'sequelize';
+import {ArticleDomain} from '../entities/article.domain';
+import {Transaction} from 'sequelize';
 
 /**
  * 정렬 순서

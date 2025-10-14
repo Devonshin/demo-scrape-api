@@ -3,11 +3,11 @@
  * @date 2025-10-13
  * Point d’entrée principal de l’application - bootstrap de l’application Nest.js
  */
-import { NestFactory } from '@nestjs/core';
-import { Logger, ValidationPipe } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from './app.module';
+import {NestFactory} from '@nestjs/core';
+import {Logger, ValidationPipe} from '@nestjs/common';
+import {ConfigService} from '@nestjs/config';
+import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
+import {AppModule} from './app.module';
 import {HttpExceptionFilter} from "./common/filters/http-exception.filter";
 import {TransformInterceptor} from "./common/interceptors/transform.interceptor";
 import {LoggingInterceptor} from "./common/interceptors/logging.interceptor";

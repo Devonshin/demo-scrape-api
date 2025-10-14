@@ -3,15 +3,8 @@
  * @date 2025-01-13
  * SourceTag DTO - API 요청/응답 데이터 전송 객체
  */
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  IsString,
-  IsNotEmpty,
-  IsOptional,
-  IsNumber,
-  IsPositive,
-  MaxLength,
-} from 'class-validator';
+import {ApiProperty, ApiPropertyOptional} from '@nestjs/swagger';
+import {IsNotEmpty, IsOptional, IsString, MaxLength,} from 'class-validator';
 
 /**
  * 소스 태그 생성 요청 DTO

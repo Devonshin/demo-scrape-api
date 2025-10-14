@@ -3,30 +3,15 @@
  * @date 2025-10-13
  * Article Controller - Points de terminaison API relatifs aux articles
  */
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Query,
-  HttpStatus,
-  HttpCode,
-  Inject,
-  Logger,
-} from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiBearerAuth,
-} from '@nestjs/swagger';
-import { ScrapeRequestDto } from '../../application/dto/scrape-request.dto';
-import { ScrapeResponseDto, ScrapeErrorDto } from '../../application/dto/scrape-response.dto';
-import { GetArticlesQueryDto } from '../../application/dto/get-articles-query.dto';
-import { GetArticlesResponseDto } from '../../application/dto/get-articles-response.dto';
-import { IScrapeArticlesUseCase } from '../../application/ports/in/scrape-articles.use-case';
-import { IGetArticlesUseCase } from '../../application/ports/in/get-articles.use-case';
-import { ArticleDtoMapper } from '../../infrastructure/adapters/persistence/mappers/article-dto.mapper';
+import {Body, Controller, Get, HttpCode, HttpStatus, Inject, Logger, Post, Query,} from '@nestjs/common';
+import {ApiOperation, ApiResponse, ApiTags,} from '@nestjs/swagger';
+import {ScrapeRequestDto} from '../../application/dto/scrape-request.dto';
+import {ScrapeResponseDto} from '../../application/dto/scrape-response.dto';
+import {GetArticlesQueryDto} from '../../application/dto/get-articles-query.dto';
+import {GetArticlesResponseDto} from '../../application/dto/get-articles-response.dto';
+import {IScrapeArticlesUseCase} from '../../application/ports/in/scrape-articles.use-case';
+import {IGetArticlesUseCase} from '../../application/ports/in/get-articles.use-case';
+import {ArticleDtoMapper} from '../../infrastructure/adapters/persistence/mappers/article-dto.mapper';
 
 /**
  * Points de terminaison API relatifs aux articles

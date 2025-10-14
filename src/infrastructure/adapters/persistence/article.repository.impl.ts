@@ -5,7 +5,7 @@
  */
 import {Injectable, Logger} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
-import {Op, Sequelize} from 'sequelize';
+import {Op} from 'sequelize';
 import {
   ArticleFilterOptions,
   IArticleRepository,

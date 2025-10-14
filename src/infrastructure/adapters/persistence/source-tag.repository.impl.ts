@@ -3,7 +3,7 @@
  * @date 2025-01-13
  * SourceTag 리포지토리 구현체 - Sequelize를 사용한 영속성 계층
  */
-import {Injectable, NotFoundException} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {ISourceTagRepository} from '../../../domain/repositories/source-tag.repository.interface';
 import {SourceTagDomain} from '../../../domain/entities/source-tag.domain';

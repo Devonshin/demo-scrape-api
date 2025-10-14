@@ -3,7 +3,7 @@
  * @date 2025-10-13
  * 스크래핑 응답 DTO
  */
-import { ApiProperty } from '@nestjs/swagger';
+import {ApiProperty} from '@nestjs/swagger';
 
 /**
  * 스크래핑 오류 정보

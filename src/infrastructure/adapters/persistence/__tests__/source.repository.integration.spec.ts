@@ -4,15 +4,15 @@
  * SourceRepositoryImpl 통합 테스트 (실제 DB 연동)
  * - 실제 데이터베이스를 사용한 Repository 통합 테스트
  */
-import { Test, TestingModule } from '@nestjs/testing';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { ConfigModule } from '@nestjs/config';
-import { Sequelize } from 'sequelize-typescript';
-import { SourceRepositoryImpl } from '../source.repository.impl';
-import { Article, ArticleIndex, Source, SourceTag } from '../../../../entities/entity.module';
-import { SourceDomain } from '../../../../domain/entities/source.domain';
-import { getTestDatabaseConfig } from '../../../../config/test-database.config';
-import { v4 as uuidv4 } from 'uuid';
+import {Test, TestingModule} from '@nestjs/testing';
+import {SequelizeModule} from '@nestjs/sequelize';
+import {ConfigModule} from '@nestjs/config';
+import {Sequelize} from 'sequelize-typescript';
+import {SourceRepositoryImpl} from '../source.repository.impl';
+import {Article, ArticleIndex, Source, SourceTag} from '../../../../entities/entity.module';
+import {SourceDomain} from '../../../../domain/entities/source.domain';
+import {getTestDatabaseConfig} from '../../../../config/test-database.config';
+import {v4 as uuidv4} from 'uuid';
 
 describe('SourceRepositoryImpl Integration Test (실제 DB 연동)', () => {
   let module: TestingModule;

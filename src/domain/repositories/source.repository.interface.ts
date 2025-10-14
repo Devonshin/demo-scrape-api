@@ -3,7 +3,7 @@
  * @date 2025-10-13
  * Source 리포지토리 인터페이스 - 도메인 계층에서 정의하는 영속성 계약
  */
-import { SourceDomain } from '../entities/source.domain';
+import {SourceDomain} from '../entities/source.domain';
 
 /**
  * Source 리포지토리 인터페이스

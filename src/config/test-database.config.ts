@@ -3,7 +3,7 @@
  * @date 2025-01-13
  * 테스트용 데이터베이스 설정
  */
-import { SequelizeModuleOptions } from '@nestjs/sequelize';
+import {SequelizeModuleOptions} from '@nestjs/sequelize';
 
 /**
  * 통합 테스트용 데이터베이스 설정

@@ -3,8 +3,8 @@
  * @date 2025-10-13
  * 환경 변수 검증 스키마 - class-validator를 사용하여 환경 변수의 타입과 값을 검증
  */
-import { plainToInstance } from 'class-transformer';
-import { IsEnum, IsNumber, IsString, validateSync, IsBoolean, IsOptional } from 'class-validator';
+import {plainToInstance} from 'class-transformer';
+import {IsBoolean, IsEnum, IsNumber, IsOptional, IsString, validateSync} from 'class-validator';
 
 /**
  * 애플리케이션 실행 환경을 정의하는 열거형

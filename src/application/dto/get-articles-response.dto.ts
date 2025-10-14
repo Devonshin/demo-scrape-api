@@ -3,7 +3,7 @@
  * @date 2025-10-13
  * Article View Response DTO
  */
-import { ApiProperty } from '@nestjs/swagger';
+import {ApiProperty} from '@nestjs/swagger';
 
 /**
  * article DTO

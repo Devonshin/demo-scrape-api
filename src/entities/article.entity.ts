@@ -3,9 +3,19 @@
  * @date 2025-10-13
  * Article 엔티티 - 수집된 뉴스 기사 정보를 저장하는 테이블
  */
-import { Table, Column, Model, DataType, ForeignKey, BelongsTo, HasMany, CreatedAt, UpdatedAt } from 'sequelize-typescript';
-import { Source } from './source.entity';
-import { ArticleIndex } from './article-index.entity';
+import {
+  BelongsTo,
+  Column,
+  CreatedAt,
+  DataType,
+  ForeignKey,
+  HasMany,
+  Model,
+  Table,
+  UpdatedAt
+} from 'sequelize-typescript';
+import {Source} from './source.entity';
+import {ArticleIndex} from './article-index.entity';
 import {bufferToUuid, uuidToBuffer} from "../common/utils/uuid.util";
 
 /**
@@ -38,7 +48,7 @@ import {bufferToUuid, uuidToBuffer} from "../common/utils/uuid.util";
 export class Article extends Model {
   /** UUID 기본 키 */
   @Column({
-    type: DataType.BLOB,
+    type: 'BINARY(16)',
     primaryKey: true,
     get() {
       const rawValue = this.getDataValue('id') as Buffer;
@@ -53,7 +63,7 @@ export class Article extends Model {
   /** 소스 외래 키 */
   @ForeignKey(() => Source)
   @Column({
-    type: DataType.BLOB,
+    type: 'BINARY(16)',
     allowNull: false,
     get() {
       const rawValue = this.getDataValue('sourceId') as Buffer;

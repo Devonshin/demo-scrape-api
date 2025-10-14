@@ -3,7 +3,7 @@
  * @date 2025-10-13
  * Configuration de scraping - paramètres pour contrôler le comportement de web scraping
  */
-import { ConfigService } from '@nestjs/config';
+import {ConfigService} from '@nestjs/config';
 
 /**
  * Interface de configuration du scraping

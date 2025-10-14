@@ -3,14 +3,14 @@
  * @date 2025-10-13
  * ArticleController 테스트
  */
-import { Test, TestingModule } from '@nestjs/testing';
-import { ArticleController } from '../article.controller';
-import { IScrapeArticlesUseCase } from '../../../application/ports/in/scrape-articles.use-case';
-import { IGetArticlesUseCase } from '../../../application/ports/in/get-articles.use-case';
-import { ScrapeRequestDto } from '../../../application/dto/scrape-request.dto';
-import { GetArticlesQueryDto } from '../../../application/dto/get-articles-query.dto';
-import { v4 as uuidv4 } from 'uuid';
-import { ArticleDomain } from '../../../domain/entities/article.domain';
+import {Test, TestingModule} from '@nestjs/testing';
+import {ArticleController} from '../article.controller';
+import {IScrapeArticlesUseCase} from '../../../application/ports/in/scrape-articles.use-case';
+import {IGetArticlesUseCase} from '../../../application/ports/in/get-articles.use-case';
+import {ScrapeRequestDto} from '../../../application/dto/scrape-request.dto';
+import {GetArticlesQueryDto} from '../../../application/dto/get-articles-query.dto';
+import {v4 as uuidv4} from 'uuid';
+import {ArticleDomain} from '../../../domain/entities/article.domain';
 
 describe('ArticleController', () => {
   let controller: ArticleController;

@@ -3,7 +3,7 @@
  * @date 2025-10-13
  * 헬스체크 서비스 - 애플리케이션 상태 및 성능 메트릭 수집
  */
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 
 /**
  * 시스템 메모리 정보 인터페이스

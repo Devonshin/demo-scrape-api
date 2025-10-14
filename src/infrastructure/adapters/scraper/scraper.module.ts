@@ -3,9 +3,9 @@
  * @date 2025-10-13
  * 스크래퍼 모듈 - 스크래퍼 서비스들을 제공하는 모듈
  */
-import { Module } from '@nestjs/common';
+import {Module} from '@nestjs/common';
 import Scraper from './scraper.service';
-import { PersistenceModule } from '../persistence/persistence.module';
+import {PersistenceModule} from '../persistence/persistence.module';
 
 /**
  * 스크래퍼 모듈

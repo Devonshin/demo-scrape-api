@@ -5,8 +5,8 @@
  * - 도메인 엔티티의 생성, 유효성 검증, 비즈니스 로직 테스트
  */
 
-import { SourceTagDomain } from '../source-tag.domain';
-import { v4 as uuidv4 } from 'uuid';
+import {SourceTagDomain} from '../source-tag.domain';
+import {v4 as uuidv4} from 'uuid';
 
 describe('SourceTagDomain', () => {
   // 테스트용 샘플 데이터

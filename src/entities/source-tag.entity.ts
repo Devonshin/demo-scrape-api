@@ -3,16 +3,8 @@
  * @date 2025-01-13
  * SourceTag 엔티티 - 동적 스크래핑을 위한 타겟 필드별 태그/클래스명 정보
  */
-import {
-  Table,
-  Column,
-  Model,
-  DataType,
-  BelongsTo,
-  ForeignKey,
-  CreatedAt,
-} from 'sequelize-typescript';
-import { Source } from './source.entity';
+import {BelongsTo, Column, CreatedAt, DataType, ForeignKey, Model, Table,} from 'sequelize-typescript';
+import {Source} from './source.entity';
 import {bufferToUuid, uuidToBuffer} from "../common/utils/uuid.util";
 
 /**
@@ -42,7 +34,7 @@ export class SourceTag extends Model {
   /** 소스 ID (UUID, sources 테이블 참조) */
   @ForeignKey(() => Source)
   @Column({
-    type: DataType.BLOB,
+    type: 'BINARY(16)',
     allowNull: false,
     get() {
       const rawValue = this.getDataValue('sourceId') as Buffer;

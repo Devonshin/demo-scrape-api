@@ -14,7 +14,8 @@ import {ISourceTagRepository} from '../../../domain/repositories/source-tag.repo
 
 /**
  * Scraper web dynamique
- * Réalise le scraping d’articles de diverses sources sur la base des configurations de balises (SourceTag) stockées en base de données.
+ * Réalise le scraping d’articles de diverses sources sur la base des configurations de balises (SourceTag) stockées en
+ * base de données.
  */
 @Injectable()
 class Scraper implements IScraperPort {

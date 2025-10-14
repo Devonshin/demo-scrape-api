@@ -3,7 +3,7 @@
  * @date 2025-01-13
  * SourceTag 리포지토리 인터페이스 - 도메인 계층에서 정의하는 영속성 계약
  */
-import { SourceTagDomain } from '../entities/source-tag.domain';
+import {SourceTagDomain} from '../entities/source-tag.domain';
 
 /**
  * SourceTag 리포지토리 인터페이스

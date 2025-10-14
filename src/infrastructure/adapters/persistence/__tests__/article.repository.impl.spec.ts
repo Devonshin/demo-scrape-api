@@ -4,12 +4,12 @@
  * ArticleRepositoryImpl 단위 테스트
  * - Repository 계층의 CRUD 및 검색 기능 테스트
  */
-import { Test, TestingModule } from '@nestjs/testing';
-import { getModelToken } from '@nestjs/sequelize';
-import { ArticleRepositoryImpl } from '../article.repository.impl';
-import { Article, ArticleIndex } from '../../../../entities/entity.module';
-import { ArticleDomain } from '../../../../domain/entities/article.domain';
-import { v4 as uuidv4 } from 'uuid';
+import {Test, TestingModule} from '@nestjs/testing';
+import {getModelToken} from '@nestjs/sequelize';
+import {ArticleRepositoryImpl} from '../article.repository.impl';
+import {Article, ArticleIndex} from '../../../../entities/entity.module';
+import {ArticleDomain} from '../../../../domain/entities/article.domain';
+import {v4 as uuidv4} from 'uuid';
 
 describe('ArticleRepositoryImpl', () => {
   let repository: ArticleRepositoryImpl;

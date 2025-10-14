@@ -3,10 +3,10 @@
  * @date 2025-10-13
  * 헬스체크 컨트롤러 - 애플리케이션 상태 확인 엔드포인트
  */
-import { Controller, Get } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { HealthService, HealthStatus } from './health.service';
-import { ApiExcludeEndpoint } from '@nestjs/swagger';
+import {Controller, Get} from '@nestjs/common';
+import {ApiExcludeEndpoint, ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {HealthService, HealthStatus} from './health.service';
+
 /**
  * 헬스체크 컨트롤러
  */

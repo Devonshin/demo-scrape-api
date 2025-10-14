@@ -3,12 +3,11 @@
  * @date 2025-01-13
  * SourceTagRepositoryImpl 단위 테스트
  */
-import { Test, TestingModule } from '@nestjs/testing';
-import { getModelToken } from '@nestjs/sequelize';
-import { NotFoundException } from '@nestjs/common';
-import { SourceTagRepositoryImpl } from '../source-tag.repository.impl';
-import { SourceTag } from '../../../../entities/entity.module';
-import { SourceTagDomain } from '../../../../domain/entities/source-tag.domain';
+import {Test, TestingModule} from '@nestjs/testing';
+import {getModelToken} from '@nestjs/sequelize';
+import {SourceTagRepositoryImpl} from '../source-tag.repository.impl';
+import {SourceTag} from '../../../../entities/entity.module';
+import {SourceTagDomain} from '../../../../domain/entities/source-tag.domain';
 
 describe('SourceTagRepositoryImpl', () => {
   let repository: SourceTagRepositoryImpl;

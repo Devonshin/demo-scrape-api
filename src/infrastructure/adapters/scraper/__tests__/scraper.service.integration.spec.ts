@@ -3,15 +3,11 @@
  * @date 2025-01-13
  * Scraper 통합 테스트
  */
-import { Test, TestingModule } from '@nestjs/testing';
+import {Test, TestingModule} from '@nestjs/testing';
 import Scraper from '../scraper.service';
-import { ISourceTagRepository } from '../../../../domain/repositories/source-tag.repository.interface';
-import { SourceDomain } from '../../../../domain/entities/source.domain';
-import { SourceTagDomain } from '../../../../domain/entities/source-tag.domain';
-import {
-  MissingTagConfigException,
-  NetworkException,
-} from '../exceptions/scraper.exceptions';
+import {ISourceTagRepository} from '../../../../domain/repositories/source-tag.repository.interface';
+import {SourceDomain} from '../../../../domain/entities/source.domain';
+import {SourceTagDomain} from '../../../../domain/entities/source-tag.domain';
 
 describe('Scraper Integration Tests', () => {
   let scraper: Scraper;

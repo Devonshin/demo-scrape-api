@@ -3,8 +3,8 @@
  * @date 2025-10-13
  * Configuration de l'application - gestion des paramètres globaux de l'app
  */
-import { ConfigService } from '@nestjs/config';
-import { Environment } from './env.validation';
+import {ConfigService} from '@nestjs/config';
+import {Environment} from './env.validation';
 
 /**
  * Interface de configuration de l'application

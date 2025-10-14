@@ -3,9 +3,9 @@
  * @date 2025-10-13
  * 기사 조회 쿼리 DTO
  */
-import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsOptional, IsInt, Min, Max, IsString, IsIn, IsDateString } from 'class-validator';
+import {ApiProperty} from '@nestjs/swagger';
+import {Type} from 'class-transformer';
+import {IsIn, IsInt, IsOptional, IsString, Max, Min} from 'class-validator';
 
 /**
  * GET /articles 쿼리 파라미터 DTO

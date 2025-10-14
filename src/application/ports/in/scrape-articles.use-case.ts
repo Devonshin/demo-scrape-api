@@ -4,12 +4,14 @@
  * Interface du cas d’utilisation de scraping d’articles - port entrant
  */
 
+import {ScrapeRequestDto} from "../../dto/scrape-request.dto";
+
 /**
  * DTO de commande de scraping d’articles
  */
 export interface ScrapeArticlesCommand {
   sourceId?: string; // Ne scraper qu’une source spécifique (si non spécifié, toutes les sources actives)
-  forceRefresh?: boolean; // Forcer l’exécution en ignorant la dernière heure de scraping
+  uri?: string; // append uri to target domain
 }
 
 /**
@@ -18,6 +20,7 @@ export interface ScrapeArticlesCommand {
 export interface ScrapeResultSummary {
   totalSourcesScraped: number;
   totalArticlesScraped: number;
+  duplicateArticles: number;
   successfulSources: number;
   failedSources: number;
   errors: Array<{ sourceId: string; error: string }>;
@@ -33,5 +36,5 @@ export interface IScrapeArticlesUseCase {
    * @param command Commande de scraping
    * @returns Résumé des résultats de scraping
    */
-  execute(command: ScrapeArticlesCommand): Promise<ScrapeResultSummary>;
+  execute (command: ScrapeRequestDto): Promise<ScrapeResultSummary>;
 }

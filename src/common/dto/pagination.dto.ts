@@ -1,13 +1,13 @@
 /**
  * @author Dongwoo
  * @date 2025-10-13
- * 페이지네이션 DTO - 공통 페이지네이션 로직
+ * DTO de pagination - logique de pagination commune
  */
 import { IsOptional, IsInt, Min, Max } from 'class-validator';
 import { Type } from 'class-transformer';
 
 /**
- * 페이지네이션 요청 DTO
+ * DTO de requête de pagination
  */
 export class PaginationDto {
   /** 페이지 번호 (1부터 시작) */

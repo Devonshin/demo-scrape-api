@@ -22,7 +22,8 @@
     "seed:generate": "sequelize-cli seed:generate --name",
     "seed:run": "sequelize-cli db:seed:all",
     "seed:revert": "sequelize-cli db:seed:undo",
-    "test:scraper": "ts-node -r tsconfig-paths/register src/infrastructure/adapters/scraper/test-scraper.ts"
+    "test:scraper": "ts-node -r tsconfig-paths/register src/infrastructure/adapters/scraper/test-scraper.ts",
+    "rebuild-indexes": "ts-node -r tsconfig-paths/register src/scripts/rebuild-article-indexes.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.6",
@@ -36,6 +37,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
     "mysql2": "^3.15.2",
+    "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
     "sequelize": "^6.37.7",

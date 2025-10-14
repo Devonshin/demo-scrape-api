@@ -4,7 +4,7 @@
  * Source Mapper - Domain과 Persistence 엔티티 변환
  */
 import {SourceDomain} from '../../../../domain/entities/source.domain';
-import {Source} from '../../../../entities';
+import {Source} from "../../../../entities/source.entity";
 
 /**
  * Source 엔티티 변환 mapper
@@ -22,6 +22,7 @@ export class SourceMapper {
       source.get('id'),
       source.get('title'),
       source.get('targetUrl'),
+      source.get('mainWrapper'),
       source.get('createdAt'),
       source.get('updatedAt'),
     );

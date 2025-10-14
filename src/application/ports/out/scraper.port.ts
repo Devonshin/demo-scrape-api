@@ -32,16 +32,17 @@ export interface ScrapeResult {
  */
 export interface IScraperPort {
   /**
-   * Scraper des articles à partir d’une source spécifique
-   * @param source URL de la source
+   * Scraper des articles à partir d'une source spécifique
+   * @param source Source domain entity (contient targetUrl et id)
+   * @param uri
    * @returns Résultat de scraping
    */
-  scrapeArticles (source: SourceDomain): Promise<ScrapeResult>;
+  scrapeArticles (source: SourceDomain, uri: string | undefined): Promise<ScrapeResult>;
 
   /**
    * Vérifier si le scraping est possible
    * @param url URL à vérifier
    * @returns Possibilité de scraping
    */
-  canScrape(url: string): Promise<boolean>;
+  canScrape (url: string): Promise<boolean>;
 }

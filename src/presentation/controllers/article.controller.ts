@@ -26,7 +26,7 @@ import { GetArticlesQueryDto } from '../../application/dto/get-articles-query.dt
 import { GetArticlesResponseDto } from '../../application/dto/get-articles-response.dto';
 import { IScrapeArticlesUseCase } from '../../application/ports/in/scrape-articles.use-case';
 import { IGetArticlesUseCase } from '../../application/ports/in/get-articles.use-case';
-import { ArticleDtoMapper } from '../../application/mappers/article-dto.mapper';
+import { ArticleDtoMapper } from '../../infrastructure/adapters/persistence/mappers/article-dto.mapper';
 
 /**
  * Points de terminaison API relatifs aux articles
@@ -54,9 +54,8 @@ export class ArticleController {
     summary: 'Liste des articles',
     description: `
       API de liste des articles avec pagination, filtrage et tri.
-
       - Pagination: utilisez les paramètres page et pageSize
-      - Filtrage: sourceId, keyword, publishedAfter, publishedBefore
+      - Filtrage: sourceId, title, publishedAfter, publishedBefore
       - Tri: sortField, sortOrder
       - Recherche plein texte sur le titre: via le tableau article_indexes avec keyword
     `,
@@ -110,7 +109,7 @@ export class ArticleController {
 
       - If sourceId is specified, only the relevant source is scraped.
       - Scrape all active sources if sourceId is not specified
-      - Setting forceRefresh to true will force it to ignore the last scraping time.
+      - Setting uri for append uri to target domain.
       - If a date is specified, only articles of that date are scraped.
     `,
   })
@@ -139,10 +138,7 @@ export class ArticleController {
 
     try {
       // Exécuter le Use Case
-      const summary = await this.scrapeArticlesUseCase.execute({
-        sourceId: request.sourceId,
-        forceRefresh: request.forceRefresh || false,
-      });
+      const summary = await this.scrapeArticlesUseCase.execute(request);
 
       const completedAt = new Date();
       const durationSeconds = (completedAt.getTime() - startedAt.getTime()) / 1000;
@@ -155,7 +151,7 @@ export class ArticleController {
         failedSources: summary.failedSources,
         totalArticlesScraped: summary.totalArticlesScraped,
         newArticles: summary.totalArticlesScraped,
-        duplicates: 0, // 0 car le Use Case saute la vérification des doublons
+        duplicates: summary.duplicateArticles, // 0 car le Use Case saute la vérification des doublons
         errors: summary.errors.map((err) => ({
           sourceId: err.sourceId,
           sourceName: '', // Le nom de la source nécessite une requête séparée

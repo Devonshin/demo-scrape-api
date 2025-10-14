@@ -21,32 +21,17 @@ export class ScrapeRequestDto {
   })
   @IsOptional()
   @IsString()
-  sourceId?: string;
+  sourceId!: string;
 
   /**
-   * Indicateur de rafraîchissement forcé
-   * Si vrai, ignore la dernière heure de scraping et force l’exécution
+   * URI spécifique pour la source
    */
   @ApiProperty({
-    description: 'Rafraîchissement forcé (ignore la dernière heure de scraping)',
-    example: false,
-    required: false,
-    default: false,
-  })
-  @IsOptional()
-  @IsBoolean()
-  forceRefresh?: boolean;
-
-  /**
-   * Date à scraper (optionnel)
-   * Ne scraper que les articles de la date spécifiée
-   */
-  @ApiProperty({
-    description: 'Date à scraper (format YYYY-MM-DD, optionnel)',
-    example: '2025-10-13',
+    description: 'Enregistrer URI spécifique',
+    example: 'page=3',
     required: false,
   })
   @IsOptional()
-  @IsDateString()
-  date?: string;
+  @IsString()
+  uri?: string;
 }

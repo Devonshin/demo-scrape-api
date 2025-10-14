@@ -5,6 +5,7 @@
  */
 import { Table, Column, Model, DataType, ForeignKey, BelongsTo, CreatedAt } from 'sequelize-typescript';
 import { Article } from './article.entity';
+import {bufferToUuid, uuidToBuffer} from "../common/utils/uuid.util";
 
 /**
  * 기사 인덱스 엔티티
@@ -16,7 +17,14 @@ import { Article } from './article.entity';
   underscored: true,
   indexes: [
     {
+      // 기본 인덱스: 검색 및 정렬용
       fields: ['title_fragment', 'created_at'],
+      name: 'idx_title_fragment_created_at',  // 명시적 이름으로 중복 방지
+    },
+    {
+      // 커버링 인덱스: 검색 시 article_id를 포함하여 Index-Only Scan 가능
+      fields: ['title_fragment', 'article_id'],
+      name: 'idx_title_fragment_article_id',
     },
   ],
 })
@@ -34,15 +42,22 @@ export class ArticleIndex extends Model {
     type: DataType.STRING(50),
     allowNull: false,
   })
-  titleFragment!: string;
+  declare titleFragment: string;
 
   /** 기사 외래 키 */
   @ForeignKey(() => Article)
   @Column({
-    type: DataType.UUID,
+    type: DataType.BLOB,
     allowNull: false,
+    get() {
+      const rawValue = this.getDataValue('articleId') as Buffer;
+      return rawValue ? bufferToUuid(rawValue) : null;
+    },
+    set(value: string) {
+      this.setDataValue('articleId', value ? uuidToBuffer(value) : null);
+    },
   })
-  articleId!: string;
+  declare articleId: string;
 
   /** 생성 시간 */
   @CreatedAt

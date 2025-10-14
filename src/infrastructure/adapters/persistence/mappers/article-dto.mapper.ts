@@ -3,8 +3,8 @@
  * @date 2025-10-13
  * Article DTO mapper - Convert domain entities to DTOs
  */
-import { ArticleDomain } from '../../domain/entities/article.domain';
-import { ArticleDto } from '../dto/get-articles-response.dto';
+import { ArticleDomain } from '../../../../domain/entities/article.domain';
+import { ArticleDto } from '../../../../application/dto/get-articles-response.dto';
 
 /**
  * Article DTO mapper

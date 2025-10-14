@@ -40,7 +40,6 @@ export class GetArticlesUseCaseImpl implements IGetArticlesUseCase {
     const filterOptions: ArticleFilterOptions = {
       sourceId: query.sourceId,
       title: query.title,
-      recentDays: this.calculateRecentDays(query.publishedAfter, query.publishedBefore),
       sortField: query.sortField || 'publicationDate',
       sortOrder: query.sortOrder || 'DESC',
     };
@@ -72,27 +71,6 @@ export class GetArticlesUseCaseImpl implements IGetArticlesUseCase {
       hasNext: result.page < result.totalPages,
       hasPrevious: result.page > 1,
     };
-  }
-
-  /**
-   * publishedAfter/publishedBefore로부터 recentDays 계산
-   * @param publishedAfter 발행일 이후
-   * @param publishedBefore 발행일 이전
-   * @returns 최근 N일 (또는 undefined)
-   */
-  private calculateRecentDays(
-    publishedAfter?: Date,
-    publishedBefore?: Date,
-  ): number | undefined {
-    if (!publishedAfter || publishedBefore) {
-      return undefined;
-    }
-
-    const now = new Date();
-    const diffMs = now.getTime() - publishedAfter.getTime();
-    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-
-    return diffDays > 0 ? diffDays : undefined;
   }
 
 }

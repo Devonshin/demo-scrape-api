@@ -78,7 +78,6 @@ export class GetArticlesQueryDto {
     required: false,
   })
   @IsOptional()
-  @IsDateString()
   @Type(() => Date)
   publishedAfter?: Date;
 
@@ -91,7 +90,6 @@ export class GetArticlesQueryDto {
     required: false,
   })
   @IsOptional()
-  @IsDateString()
   @Type(() => Date)
   publishedBefore?: Date;
 

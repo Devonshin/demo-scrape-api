@@ -1,0 +1,8 @@
+INSERT INTO `sources_tags` (`id`, `source_id`, `field_name`, `tag_name`, `class_name`, `created_at`) VALUES (15, 0x72BDC8C6CD434E41BD7912A13E16C8B7, 'title', 'h2', '[data-testid=\"card-headline\"]', '2025-10-13 00:00:00');
+INSERT INTO `sources_tags` (`id`, `source_id`, `field_name`, `tag_name`, `class_name`, `created_at`) VALUES (16, 0x72BDC8C6CD434E41BD7912A13E16C8B7, 'link', '', '', '2025-10-13 00:00:00');
+INSERT INTO `sources_tags` (`id`, `source_id`, `field_name`, `tag_name`, `class_name`, `created_at`) VALUES (17, 0x72BDC8C6CD434E41BD7912A13E16C8B7, 'publication_date', 'span', '[data-testid=\"card-metadata-lastupdated\"]', '2025-10-13 00:00:00');
+INSERT INTO `sources_tags` (`id`, `source_id`, `field_name`, `tag_name`, `class_name`, `created_at`) VALUES (18, 0x72BDC8C6CD434E41BD7912A13E16C8B7, 'summary', 'p', '[data-testid=\"card-description\"]', '2025-10-13 00:00:00');
+INSERT INTO `sources_tags` (`id`, `source_id`, `field_name`, `tag_name`, `class_name`, `created_at`) VALUES (19, 0xBFE2872E0B3145528ED8FBA41BCA6CFD, 'title', 'span', '.titleline', '2025-10-13 00:00:00');
+INSERT INTO `sources_tags` (`id`, `source_id`, `field_name`, `tag_name`, `class_name`, `created_at`) VALUES (20, 0xBFE2872E0B3145528ED8FBA41BCA6CFD, 'link', 'span', '.titleline > a', '2025-10-13 00:00:00');
+INSERT INTO `sources_tags` (`id`, `source_id`, `field_name`, `tag_name`, `class_name`, `created_at`) VALUES (21, 0xBFE2872E0B3145528ED8FBA41BCA6CFD, 'publication_date', '__NEXT__span', '.age', '2025-10-13 00:00:00');
+INSERT INTO `sources_tags` (`id`, `source_id`, `field_name`, `tag_name`, `class_name`, `created_at`) VALUES (22, 0xBFE2872E0B3145528ED8FBA41BCA6CFD, 'summary', '', '', '2025-10-13 00:00:00');

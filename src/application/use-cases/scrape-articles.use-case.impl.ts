@@ -14,6 +14,7 @@ import { ISourceRepository } from '../../domain/repositories/source.repository.i
 import { IScraperPort } from '../ports/out/scraper.port';
 import { ArticleDomain } from '../../domain/entities/article.domain';
 import { v4 as uuidv4 } from 'uuid';
+import {ScrapeRequestDto} from "../dto/scrape-request.dto";
 
 /**
  * Implémentation du cas d’utilisation de scraping d’articles
@@ -37,7 +38,7 @@ export class ScrapeArticlesUseCaseImpl implements IScrapeArticlesUseCase {
    * @param command Commande de scraping
    * @returns Résumé des résultats de scraping
    */
-  async execute(command: ScrapeArticlesCommand): Promise<ScrapeResultSummary> {
+  async execute (command: ScrapeRequestDto): Promise<ScrapeResultSummary> {
     const startTime = Date.now();
     this.logger.log('Starting scrape operation', command);
 
@@ -55,6 +56,7 @@ export class ScrapeArticlesUseCaseImpl implements IScrapeArticlesUseCase {
     const summary: ScrapeResultSummary = {
       totalSourcesScraped: sources.length,
       totalArticlesScraped: 0,
+      duplicateArticles: 0,
       successfulSources: 0,
       failedSources: 0,
       errors: [],
@@ -63,10 +65,10 @@ export class ScrapeArticlesUseCaseImpl implements IScrapeArticlesUseCase {
     // Exécuter le scraping pour chaque source
     for (const source of sources) {
       try {
-        this.logger.log(`Scraping source: ${source.title} (${source.id})`);
+        this.logger.log(`Scraping source: [${source.title}] [${source.id}]`);
 
         // Effectuer le scraping
-        const scrapeResult = await this.scraper.scrapeArticles(source);
+        const scrapeResult = await this.scraper.scrapeArticles(source, command.uri);
 
         if (!scrapeResult.success) {
           summary.failedSources++;
@@ -87,13 +89,6 @@ export class ScrapeArticlesUseCaseImpl implements IScrapeArticlesUseCase {
               scrapedArticle.url,
             );
 
-            if (existingArticle && !command.forceRefresh) {
-              this.logger.debug(
-                `Article already exists: ${scrapedArticle.url}`,
-              );
-              continue;
-            }
-
             // Créer un nouvel article
             const article = new ArticleDomain(
               existingArticle?.id || uuidv4(),
@@ -106,7 +101,11 @@ export class ScrapeArticlesUseCaseImpl implements IScrapeArticlesUseCase {
 
             // Enregistrer l’article
             await this.articleRepository.save(article);
-            newArticlesCount++;
+            if (existingArticle) {
+              summary.duplicateArticles++;
+            } else {
+              newArticlesCount++;
+            }
           } catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'Unknown error';
             this.logger.warn(
@@ -114,9 +113,6 @@ export class ScrapeArticlesUseCaseImpl implements IScrapeArticlesUseCase {
             );
           }
         }
-
-        // Mettre à jour le champ lastScrapedAt de la source
-        await this.sourceRepository.updateLastScrapedAt(source.id);
 
         summary.totalArticlesScraped += newArticlesCount;
         summary.successfulSources++;
@@ -155,7 +151,7 @@ export class ScrapeArticlesUseCaseImpl implements IScrapeArticlesUseCase {
       return source ? [source] : [];
     } else {
       // Récupérer toutes les sources actives
-      return await this.sourceRepository.findAllActive();
+      return await this.sourceRepository.findAll();
     }
   }
 }

@@ -6,7 +6,7 @@
 import {Module, OnModuleInit} from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { Source, Article, ArticleIndex } from '../entities';
+import { Source, SourceTag, Article, ArticleIndex } from '../entities/entity.module';
 import {Sequelize} from "sequelize";
 
 /**
@@ -31,13 +31,13 @@ import {Sequelize} from "sequelize";
         // Nom de la base de données
         database: configService.get<string>('DB_DATABASE'),
         // Liste des entités à enregistrer
-        models: [Source, Article, ArticleIndex],
+        models: [Source, SourceTag, Article, ArticleIndex],
         // Synchronisation automatique des tables (à utiliser uniquement en développement, migrations en production)
         autoLoadModels: true,
         // 동기화 옵션 (alter: 기존 테이블 수정, force: 삭제 후 재생성)
         sync: configService.get<string>('NODE_ENV') !== 'production' ? { alter: true } : undefined,
         // Configuration du logging (activé uniquement en développement)
-        logging: configService.get<string>('NODE_ENV') === 'local' ? console.log : false,
+        // logging: configService.get<string>('NODE_ENV') === 'local' ? console.log : false,
         // Configuration du pool
         pool: {
           max: 20,

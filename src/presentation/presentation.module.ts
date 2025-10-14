@@ -17,7 +17,7 @@ import { ArticleController } from './controllers/article.controller';
     ApplicationModule,
   ],
   controllers: [
-    ArticleController,
+    ArticleController
   ],
 })
 export class PresentationModule {}

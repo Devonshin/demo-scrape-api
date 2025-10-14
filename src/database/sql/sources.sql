@@ -1,0 +1,2 @@
+INSERT INTO `sources` (`id`, `created_at`, `updated_at`, `title`, `target_url`, `main_wrapper`) VALUES (0x72BDC8C6CD434E41BD7912A13E16C8B7, '2025-10-13 20:48:16', '2025-10-13 20:48:16', 'BBC News', 'https://www.bbc.com/news', 'a[data-testid=\"internal-link\"]');
+INSERT INTO `sources` (`id`, `created_at`, `updated_at`, `title`, `target_url`, `main_wrapper`) VALUES (0xBFE2872E0B3145528ED8FBA41BCA6CFD, '2025-10-13 20:48:16', '2025-10-13 20:48:16', 'Hacker News', 'https://news.ycombinator.com', 'tr#bigbox tr.athing');

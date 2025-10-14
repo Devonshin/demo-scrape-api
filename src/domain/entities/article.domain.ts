@@ -36,24 +36,6 @@ export class ArticleDomain {
   /**
    * 도메인 엔티티를 JSON 객체로 변환
    */
-  /**
-   * 조회수 증가
-   * @returns 새로운 ArticleDomain 인스턴스 (불변성 유지)
-   */
-  incrementViewCount(): ArticleDomain {
-    return new ArticleDomain(
-      this.id,
-      this.sourceId,
-      this.title,
-      this.url,
-      this.publicationDate,
-      this.createdAt
-    );
-  }
-
-  /**
-   * 도메인 엔티티를 JSON 객체로 변환
-   */
   toJSON(): Record<string, any> {
     return {
       id: this.id,

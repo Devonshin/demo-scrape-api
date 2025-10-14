@@ -8,7 +8,9 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { HttpExceptionFilter, TransformInterceptor, LoggingInterceptor } from './common';
+import {HttpExceptionFilter} from "./common/filters/http-exception.filter";
+import {TransformInterceptor} from "./common/interceptors/transform.interceptor";
+import {LoggingInterceptor} from "./common/interceptors/logging.interceptor";
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -44,9 +46,9 @@ async function bootstrap() {
     .setTitle('Scraper API')
     .setDescription('스크래핑 및 관리 API 문서')
     .setVersion('1.0')
-    .addTag('articles', '기사 관리')
-    .addTag('sources', '소스 관리')
-    .addTag('scraper', '스크래핑 작업 관리')
+    // .addTag('articles', '기사 관리')
+    // .addTag('sources', '소스 관리')
+    // .addTag('scraper', '스크래핑 작업 관리')
     .addBearerAuth()
     .build();
 

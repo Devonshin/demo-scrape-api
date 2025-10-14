@@ -6,7 +6,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { validate } from './config';
-import { ConfigController } from './config/config.controller';
 import { HealthModule } from './health/health.module';
 import { DatabaseModule } from './database/database.module';
 import { PresentationModule } from './presentation/presentation.module';
@@ -22,7 +21,7 @@ import { PresentationModule } from './presentation/presentation.module';
     HealthModule,
     PresentationModule,
   ],
-  controllers: [ConfigController],
+  controllers: [],
   providers: [],
 })
 export class AppModule {}

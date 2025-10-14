@@ -6,6 +6,7 @@
 import { Table, Column, Model, DataType, ForeignKey, BelongsTo, HasMany, CreatedAt, UpdatedAt } from 'sequelize-typescript';
 import { Source } from './source.entity';
 import { ArticleIndex } from './article-index.entity';
+import {bufferToUuid, uuidToBuffer} from "../common/utils/uuid.util";
 
 /**
  * 뉴스 기사 엔티티
@@ -18,41 +19,58 @@ import { ArticleIndex } from './article-index.entity';
   indexes: [
     {
       fields: ['source_id'],
+      name: 'idx_articles_source_id',
     },
     {
       fields: [{ name: 'created_at', order: 'DESC' }],
+      name: 'idx_articles_created_at',
     },
     {
-      fields: [{ name: 'published_at', order: 'DESC' }, 'source_id'],
+      fields: [{ name: 'publication_date', order: 'DESC' }, 'source_id'],
+      name: 'idx_articles_publication_date_source_id',
     },
     {
-      fields: ['source_id', { name: 'published_at', order: 'DESC' }],
+      fields: ['source_id', { name: 'publication_date', order: 'DESC' }],
+      name: 'idx_articles_source_id_publication_date',
     },
   ],
 })
 export class Article extends Model {
   /** UUID 기본 키 */
   @Column({
-    type: DataType.UUID,
-    defaultValue: DataType.UUIDV4,
+    type: DataType.BLOB,
     primaryKey: true,
+    get() {
+      const rawValue = this.getDataValue('id') as Buffer;
+      return rawValue ? bufferToUuid(rawValue) : null;
+    },
+    set(value: string) {
+      this.setDataValue('id', value ? uuidToBuffer(value) : null);
+    },
   })
   declare id: string;
 
   /** 소스 외래 키 */
   @ForeignKey(() => Source)
   @Column({
-    type: DataType.UUID,
+    type: DataType.BLOB,
     allowNull: false,
+    get() {
+      const rawValue = this.getDataValue('sourceId') as Buffer;
+      return rawValue ? bufferToUuid(rawValue) : null;
+    },
+    set(value: string) {
+      this.setDataValue('sourceId', value ? uuidToBuffer(value) : null);
+    },
   })
-  sourceId!: string;
+  declare sourceId: string;
 
   /** 기사 제목 */
   @Column({
     type: DataType.STRING(255),
     allowNull: false,
   })
-  title!: string;
+  declare title: string;
 
   /** 원본 URL */
   @Column({
@@ -60,14 +78,14 @@ export class Article extends Model {
     allowNull: false,
     unique: true,
   })
-  url!: string;
+  declare url: string;
 
   /** 게시 일시 */
   @Column({
     type: DataType.DATE,
     allowNull: true,
   })
-  publicationDate?: Date;
+  declare publicationDate: Date | null;
 
   /** 생성 시간 */
   @CreatedAt

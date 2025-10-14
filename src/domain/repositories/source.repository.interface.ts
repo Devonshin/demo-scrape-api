@@ -31,31 +31,4 @@ export interface ISourceRepository {
    */
   findAll(): Promise<SourceDomain[]>;
 
-  /**
-   * 모든 활성 소스 조회
-   * @returns 활성 소스 목록
-   */
-  findAllActive(): Promise<SourceDomain[]>;
-
-  /**
-   * 소스 저장 (생성 또는 업데이트)
-   * @param source 저장할 소스 도메인 엔티티
-   * @returns 저장된 소스
-   */
-  save(source: SourceDomain): Promise<SourceDomain>;
-
-  /**
-   * 마지막 스크래핑 시간 업데이트
-   * @param id 소스 ID
-   * @returns 업데이트 성공 여부
-   */
-  updateLastScrapedAt(id: string): Promise<boolean>;
-
-  /**
-   * 소스 삭제
-   * @param id 삭제할 소스 ID
-   * @returns 삭제 성공 여부
-   */
-  delete(id: string): Promise<boolean>;
-
 }

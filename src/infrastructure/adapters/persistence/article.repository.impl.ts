@@ -1,7 +1,7 @@
 /**
  * @author Dongwoo
  * @date 2025-10-13
- * Article Repository 구현 - IArticleRepository 구현체
+ * Implémentation du dépôt d'articles - implémentation de IArticleRepository
  */
 import {Injectable, Logger} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
@@ -13,41 +13,43 @@ import {
   TransactionOptions,
 } from '../../../domain/repositories/article.repository.interface';
 import {ArticleDomain} from '../../../domain/entities/article.domain';
-import {Article, ArticleIndex} from '../../../entities';
+import {Article, ArticleIndex} from '../../../entities/entity.module';
 import {ArticleMapper} from './mappers/article.mapper';
+import {uuidToBuffer} from '../../../common/utils/uuid.util';
 
 /**
- * Article Repository 구현
- * Sequelize를 사용한 영속성 계층 구현
+ * Implémentation du dépôt d'articles
+ * Couche de persistance implémentée avec Sequelize
  */
 @Injectable()
 export class ArticleRepositoryImpl implements IArticleRepository {
 
   private readonly logger = new Logger(ArticleRepositoryImpl.name);
 
-  constructor(
+  constructor (
     @InjectModel(Article)
     private readonly articleModel: typeof Article,
     @InjectModel(ArticleIndex)
     private readonly articleIndexModel: typeof ArticleIndex,
-  ) {}
+  ) {
+  }
 
   /**
-   * 기사 저장 (생성 또는 업데이트)
-   * @param article 저장할 기사 도메인 엔티티
-   * @param options 트랜잭션 옵션
-   * @returns 저장된 기사
+   * Enregistrer un article (création ou mise à jour)
+   * @param article entité de domaine de l'article à enregistrer
+   * @param options options de transaction
+   * @returns article enregistré
    */
-  async save(article: ArticleDomain, options?: TransactionOptions): Promise<ArticleDomain> {
+  async save (article: ArticleDomain, options?: TransactionOptions): Promise<ArticleDomain> {
     try {
       const data = ArticleMapper.toPersistence(article);
 
-      // upsert를 사용하여 생성 또는 업데이트
+      // Créer ou mettre à jour avec upsert
       const [instance, created] = await this.articleModel.upsert(data as any, {
         transaction: options?.transaction,
       });
 
-      // 키워드 인덱스 생성 (신규 생성 시에만)
+      // Créer des index de mots-clés (uniquement lors de la création)
       if (created) {
         await this.createArticleIndexes(article.id, article.title, options);
       }
@@ -63,40 +65,40 @@ export class ArticleRepositoryImpl implements IArticleRepository {
   }
 
   /**
-   * 기사 ID로 조회
-   * @param id 기사 ID
-   * @param options 트랜잭션 옵션
-   * @returns 조회된 기사 또는 null
+   * Recherche par ID d'article
+   * @param id ID de l'article
+   * @param options options de transaction
+   * @returns article trouvé ou null
    */
-  async findById(id: string, options?: TransactionOptions): Promise<ArticleDomain | null> {
-    const article = await this.articleModel.findByPk(id, {
+  async findById (id: string, options?: TransactionOptions): Promise<ArticleDomain | null> {
+    const article = await this.articleModel.findByPk(uuidToBuffer(id), {
       transaction: options?.transaction,
     });
     return article ? ArticleMapper.toDomain(article) : null;
   }
 
   /**
-   * URL로 기사 조회 (중복 체크용)
+   * Recherche d'article par URL (pour vérifier les doublons)
    * @param sourceId
-   * @param url 기사 URL
-   * @param options 트랜잭션 옵션
-   * @returns 조회된 기사 또는 null
+   * @param url URL de l'article
+   * @param options options de transaction
+   * @returns article trouvé ou null
    */
-  async findByUrl(sourceId: string, url: string, options?: TransactionOptions): Promise<ArticleDomain | null> {
+  async findByUrl (sourceId: string, url: string, options?: TransactionOptions): Promise<ArticleDomain | null> {
     const article = await this.articleModel.findOne({
-      where: { sourceId: sourceId, url: url },
+      where: {sourceId: uuidToBuffer(sourceId), url: url},
       transaction: options?.transaction,
     });
     return article ? ArticleMapper.toDomain(article) : null;
   }
 
   /**
-   * 필터 조건에 따라 기사 목록 조회
-   * @param filterOptions 필터 옵션
-   * @param txOptions 트랜잭션 옵션
-   * @returns 기사 목록
+   * Récupérer la liste des articles selon les filtres
+   * @param filterOptions options de filtrage
+   * @param txOptions options de transaction
+   * @returns liste des articles
    */
-  async findAll(filterOptions?: ArticleFilterOptions, txOptions?: TransactionOptions): Promise<ArticleDomain[]> {
+  async findAll (filterOptions?: ArticleFilterOptions, txOptions?: TransactionOptions): Promise<ArticleDomain[]> {
     const where = this.buildWhereClause(filterOptions);
     const order = this.buildOrderClause(filterOptions);
 
@@ -112,14 +114,14 @@ export class ArticleRepositoryImpl implements IArticleRepository {
   }
 
   /**
-   * 페이지네이션과 필터를 적용한 기사 조회
-   * @param page 페이지 번호 (1부터 시작)
-   * @param pageSize 페이지 크기
-   * @param filterOptions 필터 옵션
-   * @param txOptions 트랜잭션 옵션
-   * @returns 페이지네이션된 기사 목록
+   * Récupérer des articles avec pagination et filtres
+   * @param page numéro de page (à partir de 1)
+   * @param pageSize taille de page
+   * @param filterOptions options de filtrage
+   * @param txOptions options de transaction
+   * @returns liste paginée des articles
    */
-  async findPaginated(
+  async findPaginated (
     page: number,
     pageSize: number,
     filterOptions?: ArticleFilterOptions,
@@ -129,48 +131,61 @@ export class ArticleRepositoryImpl implements IArticleRepository {
     const order = this.buildOrderClause(filterOptions);
     const offset = (page - 1) * pageSize;
 
-    // keyword가 있는 경우 article_indexes를 활용한 제목 전문검색
+    // Si "title" est fourni, utiliser article_indexes avec JOIN pour une recherche optimisée
     if (filterOptions?.title) {
-      // 키워드를 단어로 분리
-      const keywords = filterOptions.title
+      // Séparer le ou les mots-clés en mots
+      const titles = filterOptions.title.toLowerCase()
         .split(/[\s\,\.\!\?\-\(\)\[\]\{\}]+/)
         .filter((word) => word.length > 1)
         .map((word) => word.substring(0, 50));
 
-      if (keywords.length > 0) {
-        // ArticleIndex를 사용하여 기사 ID 조회
-        const indexes = await this.articleIndexModel.findAll({
-          where: {
-            titleFragment: {
-              [Op.in]: keywords,
+      if (titles.length > 0) {
+        // ✅ JOIN 방식으로 한 번에 조회 (쿼리 3회 → 1회로 감소)
+        const {rows, count} = await this.articleModel.findAndCountAll({
+          include: [{
+            model: this.articleIndexModel,
+            as: 'indexes',
+            where: {
+              titleFragment: {
+                [Op.in]: titles,
+              },
             },
-          },
-          attributes: ['articleId'],
-          group: ['articleId'],
-          // 모든 키워드가 포함된 기사만 조회
-          having: Sequelize.literal(`COUNT(DISTINCT title_fragment) = ${keywords.length}`),
+            attributes: [],
+            required: true,
+          }],
+          where,
+          limit: pageSize,
+          offset,
+          order,
+          distinct: true,
+          subQuery: false,
           transaction: txOptions?.transaction,
         });
 
-        const articleIds = indexes.map((index) => index.articleId);
+        const items = ArticleMapper.toDomainList(rows);
+        const totalPages = Math.ceil(count / pageSize);
 
-        if (articleIds.length === 0) {
-          // 검색 결과가 없는 경우
-          return {
-            items: [],
-            total: 0,
-            page,
-            pageSize,
-            totalPages: 0,
-          };
-        }
-
-        // 검색된 ID로 WHERE 조건 추가
-        where.id = { [Op.in]: articleIds };
+        return {
+          items,
+          total: count,
+          page,
+          pageSize,
+          totalPages,
+        };
       }
+
+      // 키워드가 비어있는 경우 빈 결과 반환
+      return {
+        items: [],
+        total: 0,
+        page,
+        pageSize,
+        totalPages: 0,
+      };
     }
 
-    const { rows, count } = await this.articleModel.findAndCountAll({
+    // title 검색이 없는 경우 기본 조회
+    const {rows, count} = await this.articleModel.findAndCountAll({
       where,
       limit: pageSize,
       offset,
@@ -191,21 +206,21 @@ export class ArticleRepositoryImpl implements IArticleRepository {
   }
 
   /**
-   * 대량 기사 저장 (성능 최적화)
-   * @param articles 저장할 기사 목록
-   * @param options 트랜잭션 옵션
-   * @returns 저장된 기사 목록
+   * Enregistrement en masse d'articles (optimisation des performances)
+   * @param articles liste des articles à enregistrer
+   * @param options options de transaction
+   * @returns liste des articles enregistrés
    */
-  async saveBulk(articles: ArticleDomain[], options?: TransactionOptions): Promise<ArticleDomain[]> {
+  async saveBulk (articles: ArticleDomain[], options?: TransactionOptions): Promise<ArticleDomain[]> {
     try {
       if (articles.length === 0) {
         return [];
       }
 
-      // 도메인 엔티티를 영속성 데이터로 변환
+      // Convertir les entités du domaine en données de persistance
       const data = articles.map((article) => ArticleMapper.toPersistence(article));
 
-      // bulkCreate로 대량 삽입 (중복시 무시)
+      // Insertion en masse avec bulkCreate (ignorer les doublons)
       const instances = await this.articleModel.bulkCreate(data as any[], {
         ignoreDuplicates: true,
         transaction: options?.transaction,
@@ -213,12 +228,12 @@ export class ArticleRepositoryImpl implements IArticleRepository {
 
       this.logger.log(`Bulk created ${instances.length} articles`);
 
-      // 생성된 기사들에 대한 인덱스 생성
+      // Créer des index pour les articles générés
       for (const article of articles) {
         await this.createArticleIndexes(article.id, article.title, options);
       }
 
-      // 도메인 엔티티로 변환하여 반환
+      // Convertir en entités de domaine et retourner
       return ArticleMapper.toDomainList(instances);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -228,69 +243,57 @@ export class ArticleRepositoryImpl implements IArticleRepository {
   }
 
   /**
-   * 소스 ID로 기사 수 조회
-   * @param sourceId 소스 ID
-   * @param options 트랜잭션 옵션
-   * @returns 기사 수
+   * Compter le nombre d'articles par ID de source
+   * @param sourceId ID de la source
+   * @param options options de transaction
+   * @returns nombre d'articles
    */
-  async countBySourceId(sourceId: string, options?: TransactionOptions): Promise<number> {
+  async countBySourceId (sourceId: string, options?: TransactionOptions): Promise<number> {
     return await this.articleModel.count({
-      where: { sourceId },
+      where: {sourceId: uuidToBuffer(sourceId)},
       transaction: options?.transaction,
     });
   }
 
   /**
-   * 필터 옵션으로 WHERE 절 구성
-   * @param options 필터 옵션
-   * @returns WHERE 절 객체
+   * Construire la clause WHERE à partir des options de filtre
+   * @param options options de filtrage
+   * @returns objet de clause WHERE
    */
-  private buildWhereClause(options?: ArticleFilterOptions): any {
+  private buildWhereClause (options?: ArticleFilterOptions): any {
     const where: any = {};
 
-    // 소스 ID 필터
+    // Filtre par ID de source
     if (options?.sourceId) {
-      where.sourceId = options.sourceId;
+      where.sourceId = uuidToBuffer(options.sourceId);
     }
 
-    // 최근 N일 내 기사 (publishedAfter보다 우선)
-    if (options?.recentDays) {
-      const daysAgo = new Date();
-      daysAgo.setDate(daysAgo.getDate() - options.recentDays);
-      where.publicationDate = { [Op.gte]: daysAgo };
-    } else {
-      // 발행일 이후
-      if (options?.publishedAfter) {
-        where.publicationDate = { [Op.gte]: options.publishedAfter };
-      }
-
-      // 발행일 이전
-      if (options?.publishedBefore) {
-        where.publicationDate = {
-          ...where.publicationDate,
-          [Op.lte]: options.publishedBefore,
-        };
-      }
+    // Publié après
+    if (options?.publishedAfter) {
+      where.publicationDate = {[Op.gte]: options.publishedAfter};
     }
 
-    // 제목 검색 (LIKE 검색)
-    if (options?.titleSearch) {
-      where.title = { [Op.like]: `%${options.titleSearch}%` };
+    // Publié avant
+    if (options?.publishedBefore) {
+      where.publicationDate = {
+        ...where.publicationDate,
+        [Op.lte]: options.publishedBefore,
+      };
     }
 
     return where;
   }
 
   /**
-   * 정렬 옵션으로 ORDER BY 절 구성
-   * @param options 필터 옵션
-   * @returns ORDER BY 절 배열
+   * Construire la clause ORDER BY à partir des options de tri
+   * @param options options de filtrage
+   * @returns tableau de clause ORDER BY
    */
-  private buildOrderClause(options?: ArticleFilterOptions): [string, string][] {
+  private buildOrderClause (options?: ArticleFilterOptions): [string, string][] {
     const sortField = options?.sortField || 'publicationDate';
     const sortOrder = options?.sortOrder || 'DESC';
 
-    // Sequelize에서 사용하는 커럼 명으로 변환 (camelCase → snake_case)
+    // Convertir en noms de colonnes utilisés par Sequelize (camelCase → snake_case)
     const columnMap: Record<string, string> = {
       publicationDate: 'publication_date',
       createdAt: 'created_at',
@@ -301,28 +304,39 @@ export class ArticleRepositoryImpl implements IArticleRepository {
     return [[column, sortOrder]];
   }
 
-  /**
-   * 기사 제목 키워드 인덱스 생성
-   * @param articleId 기사 ID
-   * @param title 기사 제목
-   * @param options 트랜잭션 옵션
-   */
-  private async createArticleIndexes(articleId: string, title: string, options?: TransactionOptions): Promise<void> {
-    try {
-      // 제목을 단어로 분리
-      const words = title
-        .split(/[\s\,\.\!\?\-\(\)\[\]\{\}]+/)
-        .filter((word) => word.length > 1)
-        .map((word) => word.substring(0, 50));
+  private static readonly REMOVE_LETTERS = [
+    "and", "or", "but", "so", "because", "although", "if", "when", "after", "before", "since", "unless", "while", "as", "though", "until", "whereas", "once", "whether", "even", "now", "that", "of", "in", "at", "on", "for", "with", "about", "by", "to", "from", "et", "ou", "mais", "donc", "parce que", "lorsque", "si", "quand", "puisque", "bien que", "tandis que", "alors que", "comme", "de", "à", "avec", "dans", "sur", "pour", "par", "en", "chez", "sous"
+  ]
 
-      // 중복 제거
+  /**
+   * Créer des index de mots-clés pour le titre de l'article
+   * @param articleId ID de l'article
+   * @param title titre de l'article
+   * @param options options de transaction
+   */
+  private async createArticleIndexes (articleId: string, title: string, options?: TransactionOptions): Promise<void> {
+    try {
+      // Séparer le titre en mots
+      const words = title
+        .toLowerCase()
+        .split(/[\s\,\.\!\?\-\(\)\[\]\{\}]+/)
+        .filter((word) =>
+          word.length > 1 && ArticleRepositoryImpl.REMOVE_LETTERS.indexOf(word.toLowerCase()) === -1
+        )
+        .map((word) =>
+          word
+            .replace(/\W/g, '')
+            .substring(0, 50)
+        );
+
+      // Supprimer les doublons
       const uniqueWords = [...new Set(words)];
 
-      // bulkCreate로 대량 삽입
+      // Insertion en masse via bulkCreate
       if (uniqueWords.length > 0) {
         await this.articleIndexModel.bulkCreate(
           uniqueWords.map((word) => ({
-            articleId,
+            articleId,  // Le setter d'entité convertit automatiquement en Buffer
             titleFragment: word,
           })),
           {

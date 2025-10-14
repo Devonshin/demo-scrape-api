@@ -29,12 +29,6 @@ export interface ArticleFilterOptions {
   /** 발행일 이전 (이 날짜 포함) */
   publishedBefore?: Date;
 
-  /** 최근 N일 내 기사 조회 */
-  recentDays?: number;
-
-  /** 제목 검색 (LIKE 검색) */
-  titleSearch?: string;
-
   /** 키워드 검색 */
   title?: string;
 

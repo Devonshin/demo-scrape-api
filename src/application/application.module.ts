@@ -8,6 +8,7 @@ import { PersistenceModule } from '../infrastructure/adapters/persistence/persis
 import { ScraperModule } from '../infrastructure/adapters/scraper/scraper.module';
 import { ScrapeArticlesUseCaseImpl } from './use-cases/scrape-articles.use-case.impl';
 import { GetArticlesUseCaseImpl } from './use-cases/get-articles.use-case.impl';
+import { ManageSourceTagsUseCaseImpl } from './use-cases/manage-source-tags.use-case.impl';
 
 /**
  * Application Module
@@ -28,10 +29,15 @@ import { GetArticlesUseCaseImpl } from './use-cases/get-articles.use-case.impl';
       provide: 'IGetArticlesUseCase',
       useClass: GetArticlesUseCaseImpl,
     },
+    {
+      provide: 'IManageSourceTagsUseCase',
+      useClass: ManageSourceTagsUseCaseImpl,
+    },
   ],
   exports: [
     'IScrapeArticlesUseCase',
     'IGetArticlesUseCase',
+    'IManageSourceTagsUseCase',
   ],
 })
 export class ApplicationModule {}

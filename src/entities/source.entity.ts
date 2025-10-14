@@ -5,6 +5,8 @@
  */
 import { Table, Column, Model, DataType, HasMany, CreatedAt, UpdatedAt } from 'sequelize-typescript';
 import { Article } from './article.entity';
+import { SourceTag } from './source-tag.entity';
+import {bufferToUuid, uuidToBuffer} from "../common/utils/uuid.util";
 
 /**
  * 뉴스 소스 엔티티
@@ -14,23 +16,20 @@ import { Article } from './article.entity';
   tableName: 'sources',
   timestamps: true,
   underscored: true,
-  indexes: [
-    {
-      unique: true,
-      fields: ['title'],
-    },
-    {
-      unique: true,
-      fields: ['target_url'],
-    },
-  ],
+  indexes: [],
 })
 export class Source extends Model {
   /** UUID 기본 키 */
   @Column({
-    type: DataType.UUID,
-    defaultValue: DataType.UUIDV4,
+    type: DataType.BLOB,
     primaryKey: true,
+    get() {
+      const rawValue = this.getDataValue('id') as Buffer;
+      return rawValue ? bufferToUuid(rawValue) : null;
+    },
+    set(value: string) {
+      this.setDataValue('id', value ? uuidToBuffer(value) : null);
+    },
   })
   declare id: string;
 
@@ -38,17 +37,22 @@ export class Source extends Model {
   @Column({
     type: DataType.STRING(255),
     allowNull: false,
-    unique: true,
   })
-  title!: string;
+  declare title: string;
 
   /** 타겟 대상 도메인 주소 */
   @Column({
     type: DataType.STRING(255),
-    allowNull: false,
-    unique: true,
+    allowNull: false
   })
-  targetUrl!: string;
+  declare targetUrl: string;
+
+  /** 크롤링 메인 클래스 */
+  @Column({
+    type: DataType.STRING(255),
+    allowNull: false,
+  })
+  declare mainWrapper: string;
 
   /** 생성 시간 */
   @CreatedAt
@@ -69,4 +73,8 @@ export class Source extends Model {
   /** Article과의 관계 (1:N) */
   @HasMany(() => Article)
   articles?: Article[];
+
+  /** SourceTag와의 관계 (1:N) */
+  @HasMany(() => SourceTag)
+  tags?: SourceTag[];
 }

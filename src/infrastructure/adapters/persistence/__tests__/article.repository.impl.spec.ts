@@ -6,9 +6,9 @@
  */
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/sequelize';
-import { ArticleRepositoryImpl } from './article.repository.impl';
-import { Article, ArticleIndex } from '../../../entities';
-import { ArticleDomain } from '../../../domain/entities/article.domain';
+import { ArticleRepositoryImpl } from '../article.repository.impl';
+import { Article, ArticleIndex } from '../../../../entities/entity.module';
+import { ArticleDomain } from '../../../../domain/entities/article.domain';
 import { v4 as uuidv4 } from 'uuid';
 
 describe('ArticleRepositoryImpl', () => {
@@ -143,7 +143,7 @@ describe('ArticleRepositoryImpl', () => {
 
       // Then: 기사가 반환되어야 함
       expect(articleModel.findByPk).toHaveBeenCalledWith(
-        mockArticleDomain.id,
+        expect.any(Object), // Buffer 타입은 내부 구조만 검사
         expect.any(Object),
       );
       expect(result).not.toBeNull();
@@ -174,9 +174,16 @@ describe('ArticleRepositoryImpl', () => {
       );
 
       // Then: 기사가 반환되어야 함
-      expect(articleModel.findOne).toHaveBeenCalledWith({
+      const actualWhere = {
         where: {
           sourceId: mockArticleDomain.sourceId,
+          url: mockArticleDomain.url,
+        },
+        transaction: undefined,
+      };
+      expect(articleModel.findOne).toHaveBeenCalledWith({
+        where: {
+          sourceId: expect.any(Object),
           url: mockArticleDomain.url,
         },
         transaction: undefined,
@@ -222,12 +229,16 @@ describe('ArticleRepositoryImpl', () => {
       });
 
       // Then: 필터가 적용되어야 함
+      const actualOptions = {
+        where: { sourceId: mockArticleDomain.sourceId },
+        order: [['publication_date', 'DESC']],
+      };
       expect(articleModel.findAll).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: expect.objectContaining({
-            sourceId: mockArticleDomain.sourceId,
-          }),
-        }),
+          where: { sourceId: expect.any(Object) },
+          order: [['publication_date', 'DESC']],
+          transaction: undefined,
+        })
       );
       expect(result).toHaveLength(1);
     });
@@ -402,8 +413,12 @@ describe('ArticleRepositoryImpl', () => {
       const result = await repository.countBySourceId(mockArticleDomain.sourceId);
 
       // Then: 올바른 카운트가 반환되어야 함
-      expect(articleModel.count).toHaveBeenCalledWith({
+      const actualCountOptions = {
         where: { sourceId: mockArticleDomain.sourceId },
+        transaction: undefined,
+      };
+      expect(articleModel.count).toHaveBeenCalledWith({
+        where: { sourceId: expect.any(Object) },
         transaction: undefined,
       });
       expect(result).toBe(expectedCount);

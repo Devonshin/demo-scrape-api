@@ -4,7 +4,7 @@
  * Article Mapper - 도메인 엔티티와 Sequelize 엔티티 간 변환
  */
 import {ArticleDomain} from '../../../../domain/entities/article.domain';
-import {Article} from '../../../../entities';
+import {Article} from '../../../../entities/entity.module';
 
 /**
  * Article Mapper

@@ -33,6 +33,7 @@
       "module": "commonjs"
     }
   },
+  "type": "module",
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

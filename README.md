@@ -12,8 +12,8 @@ API REST pour le scraping et la gestion d'articles de presse.
 # 1. Démarrer tous les services
 docker-compose up -d
 
-# 2. Exécuter les migrations
-npm run migration:run
+# 2. npm install
+npm install
 
 # 3. Générer les données de seed
 npm run seed:run

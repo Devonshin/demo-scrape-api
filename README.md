@@ -11,73 +11,20 @@ API REST pour le scraping et la gestion d'articles de presse.
 ### Option 1: Installation avec Docker (Recommandé)
 
 ```bash
-# Démarrer tous les services
+# 1. Démarrer tous les services
 docker-compose up -d
 
-# Vérifier les logs
-docker-compose logs -f app-dev
-```
-
-L'application démarre sur `http://localhost:3000`
-
-**Commandes utiles:**
-```bash
-# Redémarrer l'application
-docker-compose restart app-dev
-
-# Accéder au shell du conteneur
-docker-compose exec app-dev sh
-
-# Accéder à MySQL
-docker-compose exec mysql mysql -u font_ninja -pfontninja@password font_ninja_scrapping_db
-```
-
-### Option 2: Installation Manuelle
-
-```bash
-# 1. Installer les dépendances
-npm install
-
-# 2. Configurer l'environnement
-cp .env.local .env
-
-# 3. Créer la base de données MySQL
-mysql -u root -p
-CREATE DATABASE font_ninja_scrapping_db;
-CREATE USER 'font_ninja'@'localhost' IDENTIFIED BY 'fontninja@password';
-GRANT ALL PRIVILEGES ON font_ninja_scrapping_db.* TO 'font_ninja'@'localhost';
-FLUSH PRIVILEGES;
-EXIT;
-
-# 4. Exécuter les migrations
+# 2. Exécuter les migrations
 npm run migration:run
 
-# 5. Démarrer l'application
-npm run start:local
-```
+# 3. Générer les données de seed
+npm run seed:run
 
-## Configuration
-
-Fichier `.env`:
-```env
-NODE_ENV=local
-PORT=3000
-DB_HOST=localhost
-DB_PORT=3306
-DB_USERNAME=font_ninja
-DB_PASSWORD=fontninja@password
-DB_DATABASE=font_ninja_scrapping_db
 ```
 
 ## Tests
 
 ```bash
-# Avec Docker
-docker-compose exec app-dev npm test
-
-# Avec couverture
-docker-compose exec app-dev npm run test:cov
-
 # En local
 npm test
 npm run test:cov

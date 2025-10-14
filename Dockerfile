@@ -26,5 +26,5 @@ EXPOSE 3000
 # Use dumb-init to handle signals properly
 ENTRYPOINT ["dumb-init", "--"]
 
-# Start the application in local
-CMD ["npm", "run", "start:local:init"]
+# Start the application in development mode
+CMD ["npm", "run", "start:local"]

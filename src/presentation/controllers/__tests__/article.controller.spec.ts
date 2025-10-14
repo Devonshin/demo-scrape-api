@@ -11,15 +11,16 @@ import {ScrapeRequestDto} from '../../../application/dto/scrape-request.dto';
 import {GetArticlesQueryDto} from '../../../application/dto/get-articles-query.dto';
 import {v4 as uuidv4} from 'uuid';
 import {ArticleDomain} from '../../../domain/entities/article.domain';
+import {bufferToUuid} from "../../../common/utils/uuid.util";
 
 describe('ArticleController', () => {
   let controller: ArticleController;
   let scrapeArticlesUseCase: jest.Mocked<IScrapeArticlesUseCase>;
   let getArticlesUseCase: jest.Mocked<IGetArticlesUseCase>;
-
+  const bbcNewsSourceId = bufferToUuid(Buffer.from('72BDC8C6CD434E41BD7912A13E16C8B7', 'hex'));
   const mockArticle = new ArticleDomain(
     uuidv4(),
-    uuidv4(),
+    bbcNewsSourceId,
     'Test Article',
     'https://example.com/test-article',
     new Date(),
@@ -83,7 +84,7 @@ describe('ArticleController', () => {
       const query: GetArticlesQueryDto = {
         page: 1,
         pageSize: 10,
-        sourceId: uuidv4(),
+        sourceId: bbcNewsSourceId,
         title: 'test',
         publishedAfter: new Date('2025-01-01'),
         publishedBefore: new Date('2025-12-31'),
@@ -113,7 +114,7 @@ describe('ArticleController', () => {
   describe('scrape', () => {
     it('should execute scraping successfully', async () => {
       const request: ScrapeRequestDto = {
-        sourceId: uuidv4(),
+        sourceId: bbcNewsSourceId, //BBC news
         uri: '/news',
       };
       const mockUseCaseResponse = {
@@ -139,7 +140,7 @@ describe('ArticleController', () => {
 
     it('should handle scraping errors', async () => {
       const request: ScrapeRequestDto = {
-        sourceId: uuidv4(),
+        sourceId: bbcNewsSourceId, //BBC news
       };
       const mockError = new Error('Scraping failed');
       scrapeArticlesUseCase.execute.mockRejectedValue(mockError);
@@ -149,7 +150,7 @@ describe('ArticleController', () => {
 
     it('should handle partial scraping failures', async () => {
       const request: ScrapeRequestDto = {
-        sourceId: uuidv4(),
+        sourceId: bbcNewsSourceId, //BBC news
       };
       const mockUseCaseResponse = {
         totalSourcesScraped: 2,

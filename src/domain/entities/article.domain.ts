@@ -1,12 +1,12 @@
 /**
  * @author Dongwoo
  * @date 2025-10-13
- * 도메인 Article 엔티티 - 순수 비즈니스 로직을 포함하는 엔티티
+ * Entités d'article de domaine - entités qui contiennent une logique purement commerciale
  */
 
 /**
- * 기사 도메인 엔티티
- * 인프라스트럭처에 독립적인 순수 비즈니스 엔티티
+ * Entités du domaine de l'article
+ * Entité commerciale indépendante de l'infrastructure
  */
 export class ArticleDomain {
   constructor(
@@ -19,22 +19,7 @@ export class ArticleDomain {
   ) {}
 
   /**
-   * 기사 제목에서 키워드 추출
-   * @returns 제목에서 추출한 키워드 배열
-   */
-  extractKeywords(): string[] {
-    // 제목을 단어로 분리 (공백, 특수문자 기준)
-    const words = this.title
-      .split(/[\s\,\.\!\?\-\(\)\[\]\{\}]+/)
-      .filter(word => word.length > 1) // 1글자 이하 제외
-      .map(word => word.substring(0, 50)); // 50자 제한
-
-    // 중복 제거 후 반환
-    return [...new Set(words)];
-  }
-
-  /**
-   * 도메인 엔티티를 JSON 객체로 변환
+   * Convertir les entités du domaine en objets JSON
    */
   toJSON(): Record<string, any> {
     return {

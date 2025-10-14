@@ -42,7 +42,7 @@ export class HealthController {
     description: '애플리케이션이 실행 중임',
   })
   getLiveness(): { status: string } {
-    return { status: 'alive' };
+    return { status: 'ok' };
   }
 
   /**
@@ -60,7 +60,7 @@ export class HealthController {
     // 메모리 사용량이 너무 높으면 준비되지 않음
     const isReady = !this.healthService.isMemoryUsageHigh();
     return {
-      status: isReady ? 'ready' : 'not ready',
+      status: isReady ? 'ok' : 'notok',
       ready: isReady,
     };
   }

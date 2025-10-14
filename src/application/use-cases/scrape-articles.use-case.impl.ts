@@ -7,10 +7,11 @@ import {Inject, Injectable, Logger, NotFoundException} from '@nestjs/common';
 import {IScrapeArticlesUseCase, ScrapeResultSummary,} from '../ports/in/scrape-articles.use-case';
 import {IArticleRepository} from '../../domain/repositories/article.repository.interface';
 import {ISourceRepository} from '../../domain/repositories/source.repository.interface';
-import {IScraperPort} from '../ports/out/scraper.port';
+import {IScraperPort, ScrapeResult} from '../ports/out/scraper.port';
 import {ArticleDomain} from '../../domain/entities/article.domain';
 import {v4 as uuidv4} from 'uuid';
 import {ScrapeRequestDto} from "../dto/scrape-request.dto";
+import {SourceDomain} from "../../domain/entities/source.domain";
 
 /**
  * Implémentation du cas d’utilisation de scraping d’articles
@@ -20,14 +21,15 @@ import {ScrapeRequestDto} from "../dto/scrape-request.dto";
 export class ScrapeArticlesUseCaseImpl implements IScrapeArticlesUseCase {
   private readonly logger = new Logger(ScrapeArticlesUseCaseImpl.name);
 
-  constructor(
+  constructor (
     @Inject('IArticleRepository')
     private readonly articleRepository: IArticleRepository,
     @Inject('ISourceRepository')
     private readonly sourceRepository: ISourceRepository,
     @Inject('IScraperPort')
     private readonly scraper: IScraperPort,
-  ) {}
+  ) {
+  }
 
   /**
    * Exécuter le scraping d’articles
@@ -76,45 +78,10 @@ export class ScrapeArticlesUseCaseImpl implements IScrapeArticlesUseCase {
         }
 
         // Enregistrer les articles
-        let newArticlesCount = 0;
-        for (const scrapedArticle of scrapeResult.articles) {
-          try {
-            // Vérifier les doublons d’URL
-            const existingArticle = await this.articleRepository.findByUrl(
-              source.id,
-              scrapedArticle.url,
-            );
-
-            // Créer un nouvel article
-            const article = new ArticleDomain(
-              existingArticle?.id || uuidv4(),
-              source.id,
-              scrapedArticle.title,
-              scrapedArticle.url,
-              scrapedArticle.publicationDate || null,
-              existingArticle?.createdAt || new Date(),
-            );
-
-            // Enregistrer l’article
-            await this.articleRepository.save(article);
-            if (existingArticle) {
-              summary.duplicateArticles++;
-            } else {
-              newArticlesCount++;
-            }
-          } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-            this.logger.warn(
-              `Failed to save article: ${scrapedArticle.title} - ${errorMessage}`,
-            );
-          }
-        }
-
-        summary.totalArticlesScraped += newArticlesCount;
+        await this.saveArticles(scrapeResult, source, summary);
         summary.successfulSources++;
-
         this.logger.log(
-          `Successfully scraped ${newArticlesCount} articles from ${source.title}`,
+          `Successfully scraped ${summary.totalArticlesScraped} articles from ${source.title}`,
         );
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -135,12 +102,46 @@ export class ScrapeArticlesUseCaseImpl implements IScrapeArticlesUseCase {
     return summary;
   }
 
+  // Enregistrer les articles
+  private saveArticles =
+    async (scrapeResult: ScrapeResult, source: SourceDomain, summary: ScrapeResultSummary) => {
+      for (const scrapedArticle of scrapeResult.articles) {
+        try {
+          // Vérifier les doublons d’URL
+          const existingArticle = await this.articleRepository.findByUrl(
+            source.id,
+            scrapedArticle.url,
+          );
+
+          // Créer un nouvel article
+          const article = new ArticleDomain(
+            existingArticle?.id || uuidv4(),
+            source.id,
+            scrapedArticle.title,
+            scrapedArticle.url,
+            scrapedArticle.publicationDate || null,
+            existingArticle?.createdAt || new Date(),
+          );
+          await this.articleRepository.save(article);
+          if (existingArticle) {
+            summary.duplicateArticles++;
+          }
+          summary.totalArticlesScraped++;
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+          this.logger.warn(
+            `Failed to save article: ${scrapedArticle.title} - ${errorMessage}`,
+          );
+        }
+      }
+    }
+
   /**
    * Récupérer la liste des sources cibles à scraper
    * @param sourceId ID de la source spécifique (optionnel)
    * @returns Liste des sources
    */
-  private async getTargetSources(sourceId?: string) {
+  private async getTargetSources (sourceId?: string) {
     if (sourceId) {
       // Ne récupérer que la source spécifiée
       const source = await this.sourceRepository.findById(sourceId);

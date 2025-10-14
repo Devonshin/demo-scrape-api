@@ -124,7 +124,6 @@ export class ArticleController {
     try {
       // Exécuter le Use Case
       const summary = await this.scrapeArticlesUseCase.execute(request);
-
       const completedAt = new Date();
       const durationSeconds = (completedAt.getTime() - startedAt.getTime()) / 1000;
 
@@ -135,7 +134,7 @@ export class ArticleController {
         successfulSources: summary.successfulSources,
         failedSources: summary.failedSources,
         totalArticlesScraped: summary.totalArticlesScraped,
-        newArticles: summary.totalArticlesScraped,
+        newArticles: summary.totalArticlesScraped - summary.duplicateArticles,
         duplicates: summary.duplicateArticles, // 0 car le Use Case saute la vérification des doublons
         errors: summary.errors.map((err) => ({
           sourceId: err.sourceId,

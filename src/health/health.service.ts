@@ -1,44 +1,44 @@
 /**
  * @author Dongwoo
  * @date 2025-10-13
- * 헬스체크 서비스 - 애플리케이션 상태 및 성능 메트릭 수집
+ * Service HealthCheck - Collecte de données sur l'état de santé et les performances de l'application
  */
 import {Injectable} from '@nestjs/common';
 
 /**
- * 시스템 메모리 정보 인터페이스
+ * Interface d'information sur la mémoire du système
  */
 export interface MemoryInfo {
-  /** 총 메모리 (bytes) */
+  /** Mémoire totale (bytes) */
   total: number;
-  /** 사용 중인 메모리 (bytes) */
+  /** Mémoire utilisée(bytes) */
   used: number;
-  /** 사용 가능한 메모리 (bytes) */
+  /** Mémoire disponible (bytes) */
   free: number;
-  /** 메모리 사용률 (%) */
+  /** Utilisation de la mémoire (%) */
   usagePercent: number;
 }
 
 /**
- * 애플리케이션 상태 정보 인터페이스
+ * Interface d'information sur l'état de l'application
  */
 export interface HealthStatus {
-  /** 애플리케이션 상태 */
-  status: 'healthy' | 'unhealthy';
-  /** 현재 타임스탬프 */
+  /** Statut de la demande */
+  status: 'ok' | 'notok';
+  /** Horodatage actuel */
   timestamp: string;
-  /** 가동 시간 (초) */
+  /** Temps de disponibilité (secondes) */
   uptime: number;
-  /** 메모리 정보 */
+  /** Informations sur la mémoire */
   memory: MemoryInfo;
-  /** Node.js 버전 */
+  /** version de Node.js */
   nodeVersion: string;
-  /** 환경 */
+  /** Environnement */
   environment: string;
 }
 
 /**
- * 헬스체크 서비스
+ * Service de bilan de santé
  */
 @Injectable()
 export class HealthService {
@@ -49,8 +49,8 @@ export class HealthService {
   }
 
   /**
-   * 애플리케이션 헬스 상태를 반환
-   * @returns 헬스 상태 정보
+   * Renvoie l’état de santé de l’application
+   * @returns Informations sur l'état de santé
    */
   getHealth(): HealthStatus {
     const memoryUsage = process.memoryUsage();
@@ -59,7 +59,7 @@ export class HealthService {
     const freeMemory = totalMemory - usedMemory;
 
     return {
-      status: 'healthy',
+      status: 'ok',
       timestamp: new Date().toISOString(),
       uptime: Math.floor((Date.now() - this.startTime) / 1000),
       memory: {
@@ -74,9 +74,9 @@ export class HealthService {
   }
 
   /**
-   * 메모리 사용량이 임계값을 초과하는지 확인
-   * @param threshold - 임계값 (기본: 90%)
-   * @returns 임계값 초과 여부
+   * Vérifier si l'utilisation de la mémoire dépasse le seuil
+   * @param threshold - le seuil (기본: 90%)
+   * @returns vérification du dépassement du seuil
    */
   isMemoryUsageHigh(threshold: number = 90): boolean {
     const health = this.getHealth();

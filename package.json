@@ -12,7 +12,7 @@
     "start:local": "nest start --NODE_ENV=local",
     "start:local:init": "npm ci && npm run seed:run && npm run start:local",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",

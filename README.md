@@ -8,8 +8,6 @@ API REST pour le scraping et la gestion d'articles de presse.
 
 ## Installation
 
-### Option 1: Installation avec Docker (Recommandé)
-
 ```bash
 # 1. Démarrer tous les services
 docker-compose up -d
@@ -22,13 +20,6 @@ npm run seed:run
 
 ```
 
-## Tests
-
-```bash
-# En local
-npm test
-npm run test:cov
-```
 ## API Documentation
 
 Documentation Swagger disponible sur:

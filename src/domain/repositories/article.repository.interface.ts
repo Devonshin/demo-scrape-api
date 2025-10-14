@@ -32,6 +32,9 @@ export interface ArticleFilterOptions {
   /** 키워드 검색 */
   title?: string;
 
+  /** 최근 일수 (현재로부터 며칠 이내의 기사) */
+  recentDays?: number;
+
   /** 정렬 필드 */
   sortField?: SortField;
 

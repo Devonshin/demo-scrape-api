@@ -21,6 +21,7 @@ describe('SourceRepositoryImpl', () => {
     uuidv4(),
     'Test Source',
     'https://example.com',
+    '.main-content',
     new Date(),
     new Date(),
   );
@@ -30,6 +31,7 @@ describe('SourceRepositoryImpl', () => {
     id: mockSourceDomain.id,
     title: mockSourceDomain.title,
     targetUrl: mockSourceDomain.targetUrl,
+    mainWrapper: mockSourceDomain.mainWrapper,
     createdAt: mockSourceDomain.createdAt,
     updatedAt: mockSourceDomain.updatedAt,
     get: jest.fn((key: string) => {
@@ -37,6 +39,7 @@ describe('SourceRepositoryImpl', () => {
         id: mockSourceDomain.id,
         title: mockSourceDomain.title,
         targetUrl: mockSourceDomain.targetUrl,
+        mainWrapper: mockSourceDomain.mainWrapper,
         createdAt: mockSourceDomain.createdAt,
         updatedAt: mockSourceDomain.updatedAt,
       };

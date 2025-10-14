@@ -292,13 +292,8 @@ describe('ArticleRepositoryImpl', () => {
       expect(result.totalPages).toBe(5); // Math.ceil(10/2)
     });
 
-    it('키워드 검색 시 ArticleIndex를 활용해야 한다', async () => {
+    it('키워드 검색 시 ArticleIndex를 JOIN으로 활용해야 한다', async () => {
       // Given: 키워드 검색을 위한 설정
-      const mockIndexes = [
-        { articleId: mockArticleDomain.id },
-        { articleId: uuidv4() },
-      ];
-      articleIndexModel.findAll.mockResolvedValue(mockIndexes as any);
       articleModel.findAndCountAll.mockResolvedValue({
         rows: [mockArticleEntity],
         count: 1,
@@ -309,20 +304,29 @@ describe('ArticleRepositoryImpl', () => {
         title: 'Test Article',
       });
 
-      // Then: ArticleIndex가 먼저 조회되어야 함
-      expect(articleIndexModel.findAll).toHaveBeenCalled();
+      // Then: ArticleIndex와 JOIN하여 조회되어야 함
       expect(articleModel.findAndCountAll).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: expect.objectContaining({
-            id: expect.any(Object),
-          }),
+          include: expect.arrayContaining([
+            expect.objectContaining({
+              model: articleIndexModel,
+              as: 'indexes',
+              where: expect.any(Object),
+              required: true,
+            }),
+          ]),
         }),
       );
+      expect(result.items).toHaveLength(1);
+      expect(result.total).toBe(1);
     });
 
     it('키워드 검색 결과가 없으면 빈 결과를 반환해야 한다', async () => {
-      // Given: ArticleIndex 검색 결과가 없는 경우
-      articleIndexModel.findAll.mockResolvedValue([]);
+      // Given: ArticleIndex JOIN 결과가 없는 경우
+      articleModel.findAndCountAll.mockResolvedValue({
+        rows: [],
+        count: 0,
+      } as any);
 
       // When: title 필터로 검색
       const result = await repository.findPaginated(1, 10, {

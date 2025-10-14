@@ -43,6 +43,13 @@ export class GetArticlesUseCaseImpl implements IGetArticlesUseCase {
     // 날짜 범위 설정
     if (query.publishedAfter) {
       filterOptions.publishedAfter = query.publishedAfter;
+      // publishedBefore가 없을 때만 recentDays를 계산
+      if (!query.publishedBefore) {
+        filterOptions.recentDays = this.calculateRecentDays(query.publishedAfter);
+      } else {
+        // publishedBefore가 있으면 recentDays는 명시적으로 undefined
+        filterOptions.recentDays = undefined;
+      }
     }
     if (query.publishedBefore) {
       filterOptions.publishedBefore = query.publishedBefore;
@@ -69,4 +76,16 @@ export class GetArticlesUseCaseImpl implements IGetArticlesUseCase {
     };
   }
 
+  /**
+   * publishedAfter로부터 recentDays를 계산
+   * @param publishedAfter 발행일 이후 날짜
+   * @returns 최근 일수
+   * @private
+   */
+  private calculateRecentDays(publishedAfter: Date): number {
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - publishedAfter.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  }
 }

@@ -65,11 +65,15 @@ export class SourceTagDomain {
    */
   generateSelector(): string {
     // className이 비어있지 않으면 tagName.className 형태로 반환
-    if (this.tagName && this.className.trim() !== '') {
-      return `${this.tagName}${this.className}`;
+    if (this.className && this.className.trim() !== '') {
+      // className에서 접두사 '.' 제거 (이미 '가 있으면 제거)
+      const cleanClassName = this.className.startsWith('.')
+        ? this.className.substring(1)
+        : this.className;
+      return `${this.tagName}.${cleanClassName}`;
     }
     // className이 없으면 tagName만 반환
-    return this.className;
+    return this.tagName;
   }
 
   /**

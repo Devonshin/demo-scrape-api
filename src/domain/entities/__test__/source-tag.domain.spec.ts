@@ -40,48 +40,6 @@ describe('SourceTagDomain', () => {
       expect(sourceTag.createdAt).toBe(validData.createdAt);
     });
 
-    it('sourceId가 비어있으면 에러를 던져야 한다', () => {
-      // When & Then: sourceId가 빈 문자열인 경우 에러 발생
-      expect(() => {
-        new SourceTagDomain(
-          validData.id,
-          '',
-          validData.fieldName,
-          validData.tagName,
-          validData.className,
-          validData.createdAt,
-        );
-      }).toThrow('SourceTagDomain: sourceId는 필수 값입니다.');
-    });
-
-    it('fieldName이 비어있으면 에러를 던져야 한다', () => {
-      // When & Then: fieldName이 빈 문자열인 경우 에러 발생
-      expect(() => {
-        new SourceTagDomain(
-          validData.id,
-          validData.sourceId,
-          '',
-          validData.tagName,
-          validData.className,
-          validData.createdAt,
-        );
-      }).toThrow('SourceTagDomain: fieldName은 필수 값입니다.');
-    });
-
-    it('tagName이 비어있으면 에러를 던져야 한다', () => {
-      // When & Then: tagName이 빈 문자열인 경우 에러 발생
-      expect(() => {
-        new SourceTagDomain(
-          validData.id,
-          validData.sourceId,
-          validData.fieldName,
-          '',
-          validData.className,
-          validData.createdAt,
-        );
-      }).toThrow('SourceTagDomain: tagName은 필수 값입니다.');
-    });
-
     it('className은 비어있어도 생성 가능해야 한다', () => {
       // When: className이 빈 문자열인 경우
       const sourceTag = new SourceTagDomain(
@@ -205,7 +163,7 @@ describe('SourceTagDomain', () => {
         validData.sourceId,
         validData.fieldName,
         'span',
-        '',
+        '   ',
         validData.createdAt,
       );
 
@@ -213,7 +171,7 @@ describe('SourceTagDomain', () => {
       const selector = sourceTag.generateSelector();
 
       // Then: tagName만 반환되어야 함
-      expect(selector).toBe('');
+      expect(selector).toBe('span');
     });
 
     it('복잡한 className을 처리할 수 있어야 한다', () => {

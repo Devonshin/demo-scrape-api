@@ -52,7 +52,7 @@ curl --location 'localhost:3000/articles/scrape' \
 curl --location 'localhost:3000/articles?page=1&pageSize=100'
 
 # scrape list with filter
-curl --location 'localhost:3000/articles?page=1&pageSize=100&publishedAfter=2025-10-07&createdAt=DESC'
+curl --location 'localhost:3000/articles?page=1&pageSize=100&publishedAfter=2025-10-07&sortField=createdAt&sortOrder=DESC'
 
 ```
 

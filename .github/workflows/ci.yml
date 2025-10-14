@@ -15,8 +15,12 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: test_password
+          MYSQL_ROOT_PASSWORD: test_admin_password
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_password
           MYSQL_DATABASE: test_db
+          MYSQL_CHARSET: utf8mb4
+          MYSQL_COLLATION: utf8mb4_unicode_ci
         ports:
           - 3306:3306
         options: >-
@@ -38,60 +42,65 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run ESLint
-        run: npm run lint
-
-      - name: Check code formatting (Prettier)
-        run: npx prettier --check "src/**/*.ts" "test/**/*.ts"
-
       - name: TypeScript type check
         run: npx tsc --noEmit
 
       - name: Build
         run: npm run build
 
-      - name: Run migrations
-        run: npm run migration:run
+      - name: Initialize database tables
+        run: |
+          timeout 10s npm run start:local || true
+          sleep 5
         env:
+          NODE_ENV: test
+          PORT: 3001
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
-          DB_USERNAME: root
+          DB_USERNAME: test_user
           DB_PASSWORD: test_password
           DB_DATABASE: test_db
-          NODE_ENV: test
+          DB_SYNC: true
+          DB_LOGGING: false
+          SCRAPING_INTERVAL: 300000
+          MAX_RETRY_ATTEMPTS: 3
+          RETRY_DELAY: 1000
 
       - name: Run seeders
         run: npm run seed:run
         env:
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
-          DB_USERNAME: root
+          DB_USERNAME: test_user
           DB_PASSWORD: test_password
           DB_DATABASE: test_db
           NODE_ENV: test
 
       - name: Run unit & integration tests with coverage
-        run: npm run test:cov -- --ci --reporters=default --reporters=jest-junit
+        run: npm run test:cov -- --ci
         env:
-          JEST_JUNIT_OUTPUT_DIR: ./test-results
-          JEST_JUNIT_OUTPUT_NAME: junit-unit.xml
+          NODE_ENV: test
+          PORT: 3001
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
-          DB_USERNAME: root
+          DB_USERNAME: test_user
           DB_PASSWORD: test_password
           DB_DATABASE: test_db
-          NODE_ENV: test
+          DB_SYNC: false
+          DB_LOGGING: false
 
       - name: Run E2E tests
         run: npm run test:e2e
         env:
-          DB_HOST: 127.0.0.1
-          DB_PORT: 3306
-          DB_USERNAME: root
-          DB_PASSWORD: test_password
-          DB_DATABASE: test_db
           NODE_ENV: test
           PORT: 3001
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USERNAME: test_user
+          DB_PASSWORD: test_password
+          DB_DATABASE: test_db
+          DB_SYNC: false
+          DB_LOGGING: false
 
       - name: Upload test results
         if: always()

@@ -62,6 +62,10 @@ jobs:
           DB_DATABASE: test_db
           DB_SYNC: true
           DB_LOGGING: false
+          DB_POOL_MAX: 10
+          DB_POOL_MIN: 5
+          DB_POOL_ACQUIRE: 30000
+          DB_POOL_IDLE: 10000
           SCRAPING_INTERVAL: 300000
           MAX_RETRY_ATTEMPTS: 3
           RETRY_DELAY: 1000
@@ -69,12 +73,12 @@ jobs:
       - name: Run seeders
         run: npm run seed:run
         env:
+          NODE_ENV: test
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
           DB_USERNAME: test_user
           DB_PASSWORD: test_password
           DB_DATABASE: test_db
-          NODE_ENV: test
 
       - name: Run unit & integration tests with coverage
         run: npm run test:cov -- --ci
@@ -88,6 +92,10 @@ jobs:
           DB_DATABASE: test_db
           DB_SYNC: false
           DB_LOGGING: false
+          DB_POOL_MAX: 10
+          DB_POOL_MIN: 5
+          DB_POOL_ACQUIRE: 30000
+          DB_POOL_IDLE: 10000
 
       - name: Run E2E tests
         run: npm run test:e2e
@@ -101,6 +109,10 @@ jobs:
           DB_DATABASE: test_db
           DB_SYNC: false
           DB_LOGGING: false
+          DB_POOL_MAX: 10
+          DB_POOL_MIN: 5
+          DB_POOL_ACQUIRE: 30000
+          DB_POOL_IDLE: 10000
 
       - name: Upload test results
         if: always()

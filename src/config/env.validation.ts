@@ -1,13 +1,13 @@
 /**
  * @author Dongwoo
  * @date 2025-10-13
- * 환경 변수 검증 스키마 - class-validator를 사용하여 환경 변수의 타입과 값을 검증
+ * Schéma de validation des variables d'environnement - Validation du type et de la valeur des variables d'environnement à l'aide du class-validator
  */
 import {plainToInstance} from 'class-transformer';
 import {IsBoolean, IsEnum, IsNumber, IsOptional, IsString, validateSync} from 'class-validator';
 
 /**
- * 애플리케이션 실행 환경을 정의하는 열거형
+ * Les énumérations qui définissent l'environnement d'exécution de l'application
  */
 export enum Environment {
   Local = 'local',
@@ -17,8 +17,8 @@ export enum Environment {
 }
 
 /**
- * 환경 변수 검증을 위한 클래스
- * 모든 필수 환경 변수는 이 클래스에 정의되어야 하며, 애플리케이션 시작 시 검증됩니다.
+ * Classes pour la validation des variables d'environnement
+ * Toutes les variables d'environnement requises doivent être définies dans cette classe et sont validées au démarrage de l'application.
  */
 export class EnvironmentVariables {
   // Application Configuration
@@ -44,6 +44,18 @@ export class EnvironmentVariables {
   @IsString()
   DB_DATABASE!: string;
 
+  @IsNumber()
+  DB_POOL_MAX!: number;
+
+  @IsNumber()
+  DB_POOL_MIN!: number;
+
+  @IsNumber()
+  DB_POOL_ACQUIRE!: number;
+
+  @IsNumber()
+  DB_POOL_IDLE!: number;
+
   @IsBoolean()
   @IsOptional()
   DB_SYNC?: boolean;
@@ -67,10 +79,10 @@ export class EnvironmentVariables {
 }
 
 /**
- * 환경 변수를 검증하는 함수
- * @param config - 검증할 환경 변수 객체
- * @returns 검증된 환경 변수 객체
- * @throws 환경 변수가 유효하지 않을 경우 에러 발생
+ * Fonctions de validation des variables d'environnement
+ * @param config - Objet de la variable d'environnement à valider
+ * @returns Objets variables d'environnement validés
+ * @throws Error Lance une erreur si une variable d'environnement n'est pas valide
  */
 export function validate(config: Record<string, unknown>): EnvironmentVariables {
   const validatedConfig = plainToInstance(EnvironmentVariables, config, {

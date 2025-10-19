@@ -1,8 +1,8 @@
 /**
  * @author Devonshin
  * @date 2025-01-13
- * ArticleRepositoryImpl 단위 테스트
- * - Repository 계층의 CRUD 및 검색 기능 테스트
+ * ArticleRepositoryImpl Tests unitaires
+ * - Tester les capacités CRUD et de recherche du niveau Référentiel
  */
 import {Test, TestingModule} from '@nestjs/testing';
 import {getModelToken} from '@nestjs/sequelize';
@@ -16,7 +16,7 @@ describe('ArticleRepositoryImpl', () => {
   let articleModel: jest.Mocked<typeof Article>;
   let articleIndexModel: jest.Mocked<typeof ArticleIndex>;
 
-  // 테스트용 샘플 도메인 데이터
+  // Échantillon de données de domaine à des fins de test
   const mockArticleDomain = new ArticleDomain(
     uuidv4(),
     uuidv4(),
@@ -26,7 +26,7 @@ describe('ArticleRepositoryImpl', () => {
     new Date(),
   );
 
-  // 테스트용 샘플 엔티티 데이터
+  // Échantillon de données d'entités à des fins de test
   const mockArticleEntity = {
     id: mockArticleDomain.id,
     sourceId: mockArticleDomain.sourceId,
@@ -49,7 +49,7 @@ describe('ArticleRepositoryImpl', () => {
   };
 
   beforeEach(async () => {
-    // Article 모델 목(Mock) 생성
+    // Créer un modèle d'article fictif
     const mockArticleModel = {
       upsert: jest.fn(),
       findByPk: jest.fn(),

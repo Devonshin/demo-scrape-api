@@ -17,13 +17,13 @@ export const getTestDatabaseConfig = (): SequelizeModuleOptions => ({
   password: process.env.DB_PASSWORD || 'fontninja@password',
   database: process.env.DB_DATABASE || 'font_ninja_scrapping_db',
   autoLoadModels: true,
-  synchronize: false, // 테스트에서는 기존 스키마 사용
-  logging: false, // 테스트 시 로깅 비활성화
-  timezone: '+09:00',
+  synchronize: false, // Utiliser le schéma existant pour les tests
+  logging: false, // Désactiver la journalisation lors des tests
+  timezone: '+00:00',
   pool: {
-    max: 5, // 테스트용으로 pool 크기 축소
-    min: 0,
-    acquire: 30000,
-    idle: 10000,
+    max: +process.env.DB_POOL_MAX! || 5,
+    min: +process.env.DB_POOL_MIN! || 0,
+    acquire: +process.env.DB_POOL_ACQUIRE! || 300000,
+    idle: +process.env.DB_POOL_IDLE! || 10000,
   },
 });

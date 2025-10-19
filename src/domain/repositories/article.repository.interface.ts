@@ -1,55 +1,55 @@
 /**
  * @author Dongwoo
  * @date 2025-10-13
- * Article 리포지토리 인터페이스 - 도메인 계층에서 정의하는 영속성 계약
+ * Interface du référentiel d'articles - Accords de permanence définis par la hiérarchie des domaines
  */
 import {ArticleDomain} from '../entities/article.domain';
 import {Transaction} from 'sequelize';
 
 /**
- * 정렬 순서
+ * Ordre de tri
  */
 export type SortOrder = 'ASC' | 'DESC';
 
 /**
- * 정렬 필드
+ * Trier les champs
  */
 export type SortField = 'publicationDate' | 'createdAt' | 'viewCount' | 'title';
 
 /**
- * 기사 조회 필터 옵션
+ * Options de filtrage de l'affichage des articles
  */
 export interface ArticleFilterOptions {
-  /** 소스 ID 필터 */
+  /** Filtre d'identification de la source */
   sourceId?: string;
 
-  /** 발행일 이후 (이 날짜 포함) */
+  /** Après la date de publication (y compris cette date) */
   publishedAfter?: Date;
 
-  /** 발행일 이전 (이 날짜 포함) */
+  /** Avant la date de publication (y compris cette date) */
   publishedBefore?: Date;
 
-  /** 키워드 검색 */
+  /** Recherche par titre */
   title?: string;
 
-  /** 최근 일수 (현재로부터 며칠 이내의 기사) */
+  /** Récence (articles parus dans les quelques jours précédant la journée en cours) */
   recentDays?: number;
 
-  /** 정렬 필드 */
+  /** champs de tri */
   sortField?: SortField;
 
-  /** 정렬 순서 */
+  /** ordre de tri */
   sortOrder?: SortOrder;
 
-  /** 조회 개수 제한 */
+  /** limite (pagination) */
   limit?: number;
 
-  /** 오프셋 (페이지네이션) */
+  /** Décalage (pagination) */
   offset?: number;
 }
 
 /**
- * 페이지네이션 결과
+ * Résultats de la pagination
  */
 export interface PaginatedArticles {
   items: ArticleDomain[];
@@ -60,15 +60,14 @@ export interface PaginatedArticles {
 }
 
 /**
- * 트랜잭션 옵션
+ * Options de transaction
  */
 export interface TransactionOptions {
-  /** Sequelize 트랜잭션 인스턴스 */
   transaction?: Transaction;
 }
 
 /**
- * Article 리포지토리 인터페이스
+ * Interface de dépôt d'articles
  * 인프라스트럭처 계층에서 구현해야 하는 계약
  */
 export interface IArticleRepository {

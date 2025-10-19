@@ -1,18 +1,18 @@
 /**
  * @author Devonshin
  * @date 2025-01-24
- * SourceTag 도메인 엔티티 - 스크래핑 대상 태그 정보를 관리하는 순수 비즈니스 엔티티
+ * SourceTag Entité de domaine - une entité commerciale pure qui gère les informations sur les balises pour le scraping.
  */
 
 /**
- * 소스 태그 도메인 엔티티
+ * Entité du domaine de l'étiquette source
  *
- * 이 클래스는 웹 스크래핑을 위한 HTML 태그 선택자 정보를 관리합니다.
- * tagName과 className을 조합하여 CSS 셀렉터를 생성하는 비즈니스 로직을 포함합니다.
+ * Cette classe gère les informations relatives aux sélecteurs de balises HTML pour le web scraping.
+ * Contient la logique métier permettant de générer un sélecteur CSS basé sur une combinaison de tagName et className.
  */
 export class SourceTagDomain {
   /**
-   * SourceTagDomain 생성자
+   * SourceTagDomain Constructeur
    *
    * @param id - 고유 식별자 (BIGINT)
    * @param sourceId - 소스 ID (어떤 뉴스 소스에 속하는지)

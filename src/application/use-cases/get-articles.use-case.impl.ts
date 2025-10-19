@@ -35,7 +35,8 @@ export class GetArticlesUseCaseImpl implements IGetArticlesUseCase {
     // 필터 옵션 구성
     const filterOptions: ArticleFilterOptions = {
       sourceId: query.sourceId,
-      title: query.title,
+      // title 검색 시 소문자로 변환 (article_indexes 테이블이 소문자로 저장됨)
+      title: query.title?.toLowerCase(),
       sortField: query.sortField || 'publicationDate',
       sortOrder: query.sortOrder || 'DESC',
     };

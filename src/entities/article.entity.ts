@@ -1,7 +1,7 @@
 /**
  * @author Dongwoo
  * @date 2025-10-13
- * Article 엔티티 - 수집된 뉴스 기사 정보를 저장하는 테이블
+ * Entité article - une table qui stocke les informations collectées sur les articles de presse.
  */
 import {
   BelongsTo,
@@ -19,8 +19,8 @@ import {ArticleIndex} from './article-index.entity';
 import {bufferToUuid, uuidToBuffer} from "../common/utils/uuid.util";
 
 /**
- * 뉴스 기사 엔티티
- * 스크래핑된 뉴스 기사의 상세 정보를 저장
+ * Entité de l'article
+ * Enregistrer les détails de l'article récupéré
  */
 @Table({
   tableName: 'articles',
@@ -46,7 +46,7 @@ import {bufferToUuid, uuidToBuffer} from "../common/utils/uuid.util";
   ],
 })
 export class Article extends Model {
-  /** UUID 기본 키 */
+  /** Clé primaire UUID */
   @Column({
     type: 'BINARY(16)',
     primaryKey: true,
@@ -60,7 +60,7 @@ export class Article extends Model {
   })
   declare id: string;
 
-  /** 소스 외래 키 */
+  /** Clé étrangère source */
   @ForeignKey(() => Source)
   @Column({
     type: 'BINARY(16)',
@@ -75,14 +75,14 @@ export class Article extends Model {
   })
   declare sourceId: string;
 
-  /** 기사 제목 */
+  /** Titre de l'article */
   @Column({
     type: DataType.STRING(255),
     allowNull: false,
   })
   declare title: string;
 
-  /** 원본 URL */
+  /** Original URL */
   @Column({
     type: DataType.STRING(500),
     allowNull: false,
@@ -90,14 +90,14 @@ export class Article extends Model {
   })
   declare url: string;
 
-  /** 게시 일시 */
+  /** Date de publication */
   @Column({
     type: DataType.DATE,
     allowNull: true,
   })
   declare publicationDate: Date | null;
 
-  /** 생성 시간 */
+  /** Temps de création */
   @CreatedAt
   @Column({
     type: DataType.DATE,
@@ -105,7 +105,7 @@ export class Article extends Model {
   })
   declare createdAt: Date;
 
-  /** 수정 시간 */
+  /** Temps de modification */
   @UpdatedAt
   @Column({
     type: DataType.DATE,
@@ -113,11 +113,11 @@ export class Article extends Model {
   })
   declare updatedAt: Date;
 
-  /** Source와의 관계 (N:1) */
+  /** Relation avec la source (N:1) */
   @BelongsTo(() => Source)
   source?: Source;
 
-  /** ArticleIndex와의 관계 (1:N) */
+  /** Relation avec ArticleIndex (1:N) */
   @HasMany(() => ArticleIndex)
   indexes?: ArticleIndex[];
 

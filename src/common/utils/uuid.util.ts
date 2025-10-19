@@ -1,6 +1,6 @@
 /**
- * UUID 문자열을 Buffer로 변환
- * @param uuid - UUID 문자열 (예: '550e8400-e29b-41d4-a716-446655440000')
+ * Convertir une chaîne UUID en tampon
+ * @param uuid - Chaîne UUID (example: '550e8400-e29b-41d4-a716-446655440000')
  * @returns Buffer 객체
  */
 export function uuidToBuffer(uuid: string): Buffer {
@@ -9,17 +9,20 @@ export function uuidToBuffer(uuid: string): Buffer {
 }
 
 /**
- * Buffer를 UUID 문자열로 변환
- * @param buffer - BINARY(16) 형식의 Buffer
- * @returns UUID 문자열
+ * Convertir le Buffer en chaîne UUID
+ * @param buffer - Buffer au format BINARY(16)
+ * @returns UUID Chaîne
  */
-export function bufferToUuid(buffer: Buffer): string {
+const UUID_HEX_REGEX = RegExp(/^([0-9a-fA-F]{8})-?([0-9a-fA-F]{4})-?([0-9a-fA-F]{4})-?([0-9a-fA-F]{4})-?([0-9a-fA-F]{12})$/);
+export function bufferToUuid(buffer: Buffer): string | undefined {
   const hex = buffer.toString('hex');
-  return [
-    hex.substring(0, 8),
-    hex.substring(8, 12),
-    hex.substring(12, 16),
-    hex.substring(16, 20),
-    hex.substring(20, 32),
-  ].join('-');
+  if (!UUID_HEX_REGEX.test(hex)) {
+    throw new Error('Invalid buffer');
+  }
+  const match = UUID_HEX_REGEX.exec(hex);
+  if (!match) {
+    return undefined;
+  }
+  // match[0]은 전체 매칭 문자열이므로 match[1]부터 사용
+  return `${match[1]}-${match[2]}-${match[3]}-${match[4]}-${match[5]}`;
 }

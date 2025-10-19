@@ -1,7 +1,7 @@
 /**
  * @author Dongwoo
  * @date 2025-10-13
- * Source 엔티티 - 뉴스 소스 정보를 저장하는 테이블
+ * Entité source - une table qui stocke les informations relatives à la source de l'information.
  */
 import {Column, CreatedAt, DataType, HasMany, Model, Table, UpdatedAt} from 'sequelize-typescript';
 import {Article} from './article.entity';
@@ -9,8 +9,8 @@ import {SourceTag} from './source-tag.entity';
 import {bufferToUuid, uuidToBuffer} from "../common/utils/uuid.util";
 
 /**
- * 뉴스 소스 엔티티
- * PRD 정의에 따른 sources 테이블 구조
+ * Entités de la source d'information
+ * La structure du tableau des sources selon la définition du PRD
  */
 @Table({
   tableName: 'sources',
@@ -19,13 +19,16 @@ import {bufferToUuid, uuidToBuffer} from "../common/utils/uuid.util";
   indexes: [],
 })
 export class Source extends Model {
-  /** UUID 기본 키 */
+  /** UUID Clé primaire */
   @Column({
     type: 'BINARY(16)',
     primaryKey: true,
     get() {
       const rawValue = this.getDataValue('id') as Buffer;
-      return rawValue ? bufferToUuid(rawValue) : null;
+      if (!rawValue || !Buffer.isBuffer(rawValue) || rawValue.length !== 16) {
+        return null;
+      }
+      return bufferToUuid(rawValue);
     },
     set(value: string) {
       this.setDataValue('id', value ? uuidToBuffer(value) : null);
@@ -33,28 +36,28 @@ export class Source extends Model {
   })
   declare id: string;
 
-  /** 타겟 대상 이름 */
+  /** Nom du public cible */
   @Column({
     type: DataType.STRING(255),
     allowNull: false,
   })
   declare title: string;
 
-  /** 타겟 대상 도메인 주소 */
+  /** Adresse du domaine de destination */
   @Column({
     type: DataType.STRING(255),
     allowNull: false
   })
   declare targetUrl: string;
 
-  /** 크롤링 메인 클래스 */
+  /** Crawl de la classe principale */
   @Column({
     type: DataType.STRING(255),
     allowNull: false,
   })
   declare mainWrapper: string;
 
-  /** 생성 시간 */
+  /** Temps de création */
   @CreatedAt
   @Column({
     type: DataType.DATE,
@@ -62,7 +65,7 @@ export class Source extends Model {
   })
   declare createdAt: Date;
 
-  /** 수정 시간 */
+  /** Temps de modification */
   @UpdatedAt
   @Column({
     type: DataType.DATE,
@@ -70,11 +73,11 @@ export class Source extends Model {
   })
   declare updatedAt: Date;
 
-  /** Article과의 관계 (1:N) */
+  /** Relation avec les articles (1:N) */
   @HasMany(() => Article)
   articles?: Article[];
 
-  /** SourceTag와의 관계 (1:N) */
+  /** Relation avec SourceTag (1:N) */
   @HasMany(() => SourceTag)
   tags?: SourceTag[];
 }

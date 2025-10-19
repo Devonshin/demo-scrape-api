@@ -13,9 +13,9 @@ import {Article, ArticleIndex, Source, SourceTag} from "../../../entities/entity
 
 /**
  * Persistence Module
- * - Sequelize 모델 등록
- * - Repository 구현체 제공
- * - 의존성 주입을 위한 토큰 설정
+ * - Sequelize Enregistrement des modèles
+ * - Repository Fournir une mise en œuvre
+ * - Mise en place de jetons pour l'injection de dépendances
  */
 @Module({
   imports: [

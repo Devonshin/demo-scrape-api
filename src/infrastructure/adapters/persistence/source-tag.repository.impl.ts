@@ -1,7 +1,7 @@
 /**
  * @author Devonshin
  * @date 2025-01-13
- * SourceTag 리포지토리 구현체 - Sequelize를 사용한 영속성 계층
+ * SourceTag Mise en œuvre du référentiel
  */
 import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
@@ -11,8 +11,7 @@ import {SourceTag} from "../../../entities/source-tag.entity";
 import {uuidToBuffer} from '../../../common/utils/uuid.util';
 
 /**
- * SourceTag 리포지토리 구현체
- * Sequelize ORM을 사용하여 sources_tags 테이블과 상호작용
+ * SourceTag Mise en œuvre du référentiel
  */
 @Injectable()
 export class SourceTagRepositoryImpl implements ISourceTagRepository {
@@ -23,9 +22,9 @@ export class SourceTagRepositoryImpl implements ISourceTagRepository {
   }
 
   /**
-   * 엔티티를 도메인 모델로 변환
-   * @param entity Sequelize 엔티티
-   * @returns 도메인 모델
+   * Convertir les entités en modèles de domaine
+   * @param entity Entités séquentielles
+   * @returns Modèle de domaine
    */
   private toDomain (entity: SourceTag): SourceTagDomain {
     return SourceTagDomain.create({
@@ -33,15 +32,15 @@ export class SourceTagRepositoryImpl implements ISourceTagRepository {
       sourceId: entity.sourceId,
       fieldName: entity.fieldName,
       tagName: entity.tagName,
-      className: entity.className ?? '', // null일 경우 빈 문자열로 변환
+      className: entity.className ?? '', // Convertir en chaîne vide si elle est nulle
       createdAt: entity.createdAt,
     });
   }
 
   /**
-   * 도메인 모델을 엔티티 속성으로 변환
-   * @param domain 도메인 모델
-   * @returns 엔티티 속성
+   * Conversion des modèles de domaine en propriétés d'entités
+   * @param domain
+   * @returns entités
    */
   private toEntity (domain: SourceTagDomain): Partial<SourceTag> {
     return {
@@ -55,9 +54,9 @@ export class SourceTagRepositoryImpl implements ISourceTagRepository {
   }
 
   /**
-   * 특정 소스의 모든 태그 조회
+   * Afficher toutes les étiquettes d'une source spécifique
    * @param sourceId 소스 ID
-   * @returns 해당 소스의 태그 목록
+   * @returns Une liste de balises de cette source
    */
   async findBySourceId (sourceId: string): Promise<SourceTagDomain[]> {
     const entities = await this.sourceTagModel.findAll({

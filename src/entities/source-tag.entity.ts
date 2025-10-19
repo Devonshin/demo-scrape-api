@@ -1,7 +1,7 @@
 /**
  * @author Devonshin
  * @date 2025-01-13
- * SourceTag 엔티티 - 동적 스크래핑을 위한 타겟 필드별 태그/클래스명 정보
+ * SourceTag Entités - informations sur le nom de la balise/classe par champ cible pour le scraping dynamique
  */
 import {BelongsTo, Column, CreatedAt, DataType, ForeignKey, Model, Table,} from 'sequelize-typescript';
 import {Source} from './source.entity';
@@ -13,7 +13,7 @@ import {bufferToUuid, uuidToBuffer} from "../common/utils/uuid.util";
  */
 @Table({
   tableName: 'sources_tags',
-  timestamps: false, // created_at만 사용, updated_at 없음
+  timestamps: false, // Utiliser uniquement created_at, pas de updated_at
   underscored: true,
   indexes: [
     {
@@ -23,7 +23,7 @@ import {bufferToUuid, uuidToBuffer} from "../common/utils/uuid.util";
   ],
 })
 export class SourceTag extends Model {
-  /** BIGINT 기본 키 (AUTO_INCREMENT) */
+  /** BIGINT Clé primaire (AUTO_INCREMENT) */
   @Column({
     type: DataType.BIGINT,
     primaryKey: true,
@@ -31,7 +31,7 @@ export class SourceTag extends Model {
   })
   declare id: number;
 
-  /** 소스 ID (UUID, sources 테이블 참조) */
+  /** ID de la source (UUID, voir le tableau des sources) */
   @ForeignKey(() => Source)
   @Column({
     type: 'BINARY(16)',
@@ -43,30 +43,31 @@ export class SourceTag extends Model {
     set(value: string) {
       this.setDataValue('sourceId', value ? uuidToBuffer(value) : null);
     },
+    comment: "ID de la source (UUID, voir le tableau des sources)"
   })
   declare sourceId: string;
 
-  /** 타겟 필드 이름 (예: title, summary, date, link) */
+  /** Le nom du champ cible (par exemple: title, summary, date, link) */
   @Column({
     type: DataType.STRING(255),
     allowNull: false,
-    comment: '타겟 대상 이름 (제목|요약|생성날짜|링크)',
+    comment: 'Nom du public cible (Titre|Résumé|Date de création|Lien)',
   })
   declare fieldName: string;
 
-  /** HTML 태그명 (예: h1, div, span, a) */
+  /** Les noms des balises HTML (par exemple: h1, div, span, a) */
   @Column({
     type: DataType.STRING(255),
     allowNull: false,
-    comment: '타겟 대상 HTML 태그명',
+    comment: 'Nom de la balise HTML cible',
   })
   declare tagName: string;
 
-  /** CSS 클래스명 (선택적) */
+  /** Nom de la classe CSS (facultatif) */
   @Column({
     type: DataType.STRING(255),
     allowNull: true,
-    comment: '타겟 대상 CSS 클래스명',
+    comment: 'Nom de la classe CSS cible',
   })
   declare className: string | null;
 

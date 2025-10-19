@@ -33,16 +33,16 @@ import {Article, ArticleIndex, Source, SourceTag} from '../entities/entity.modul
         models: [Source, SourceTag, Article, ArticleIndex],
         // Synchronisation automatique des tables (à utiliser uniquement en développement, migrations en production)
         autoLoadModels: true,
-        // 동기화 옵션 (alter: 기존 테이블 수정, force: 삭제 후 재생성)
+        // Options de synchronisation (modifier : modifier une table existante, forcer : supprimer et recréer)
         sync: configService.get<string>('NODE_ENV') !== 'production' ? { alter: true } : undefined,
-        // Configuration du logging (activé uniquement en développement)
-        // logging: configService.get<string>('NODE_ENV') === 'local' ? console.log : false,
+        // Configuration du logging (activé uniquement en local)
+        logging: configService.get<string>('NODE_ENV') === 'local' ? console.log : false,
         // Configuration du pool
         pool: {
-          max: 20,
-          min: 5,
-          acquire: 30000,
-          idle: 10000,
+          max: configService.get<number>('DB_POOL_MAX'),
+          min: configService.get<number>('DB_POOL_MIN'),
+          acquire: configService.get<number>('DB_POOL_ACQUIRE'),
+          idle: configService.get<number>('DB_POOL_IDLE'),
         },
         // Fuseau horaire (UTC)
         timezone: '+00:00',

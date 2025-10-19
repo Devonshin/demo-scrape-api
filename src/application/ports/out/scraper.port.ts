@@ -12,7 +12,8 @@ import {SourceDomain} from "../../../domain/entities/source.domain";
 export interface ScrapedArticle {
   title: string;
   url: string;
-  publicationDate?: Date;
+  summary: string | null;
+  publicationDate: Date | null;
 }
 
 /**

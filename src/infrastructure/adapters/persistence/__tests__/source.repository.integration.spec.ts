@@ -11,7 +11,7 @@ import {Sequelize} from 'sequelize-typescript';
 import {SourceRepositoryImpl} from '../source.repository.impl';
 import {Article, ArticleIndex, Source, SourceTag} from '../../../../entities/entity.module';
 import {SourceDomain} from '../../../../domain/entities/source.domain';
-import {getTestDatabaseConfig} from '../../../../config/test-database.config';
+import {getTestDatabaseConfig} from './test-database.config';
 import {v4 as uuidv4} from 'uuid';
 
 describe('SourceRepositoryImpl Integration Test (실제 DB 연동)', () => {

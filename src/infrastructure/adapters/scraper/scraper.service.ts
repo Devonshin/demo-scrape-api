@@ -39,6 +39,8 @@ class Scraper implements IScraperPort {
   // Extraire les expressions régulières en constantes de classe
   private static readonly MULTIPLE_SLASHES_REGEX = /\/{2,}/g;
   private static readonly MULTIPLE_QUESTION_MARKS_REGEX = /\?{2,}/g;
+  private static readonly PUBLICATION_DATE = 'publication_date';
+  private static readonly NEXT_FLAG = '__NEXT__';
 
   /**
    * Scraper la liste des articles depuis une source
@@ -46,14 +48,11 @@ class Scraper implements IScraperPort {
    * @param uri
    * @returns Résultat de scraping
    */
-  async scrapeArticles (source: SourceDomain, uri: string | undefined = ''): Promise<ScrapeResult> {
+  async scrapeArticles (source: SourceDomain, uri: string = ''): Promise<ScrapeResult> {
     const scrapedAt = new Date();
 
     try {
-      const crawlingUrl =
-        `${source.targetUrl}/${uri.length > 0 ? ('?' + uri) : ''}`
-          .replace(Scraper.MULTIPLE_SLASHES_REGEX, '/')
-          .replace(Scraper.MULTIPLE_QUESTION_MARKS_REGEX, '?');
+      const crawlingUrl = this.checkCrawlingUrl(source, uri);
       this.logger.log(`Starting scrape for ${crawlingUrl}`);
       // Récupérer les informations de balises pour la source
       const sourceTags = await this.sourceTagRepository.findBySourceId(source.id);
@@ -80,64 +79,12 @@ class Scraper implements IScraperPort {
       const html = await this.httpClient.get<string>(crawlingUrl);
       // Analyser le HTML avec Cheerio
       const $ = cheerio.load(html);
-      const articles: ScrapedArticle[] = [];
-      const processedUrls = new Set<string>();
 
       // Extraire la liste des articles avec des sélecteurs dynamiques
       const articleListSelector = source.mainWrapper;
       this.logger.log(`Using article list selector: ${articleListSelector}`);
 
-      $(articleListSelector).each((index, element) => {
-        try {
-          const $element = $(element);
-
-          // Extraire les données par champ
-          const title = this.extractField($element, tagMap, 'title', 'text');
-          const url = this.extractField($element, tagMap, 'link', 'href');
-
-          // Valider les champs obligatoires
-          if (!title || !url) {
-            this.logger.debug(`Skipping article at index ${index}: missing title or url`);
-            return; // continuer
-          }
-
-          // Convertir l’URL relative en URL absolue
-          const absoluteUrl = this.normalizeUrl(url, source.targetUrl);
-
-          // Vérifier les URL en double
-          if (processedUrls.has(absoluteUrl)) {
-            this.logger.debug(`Skipping duplicate URL: ${absoluteUrl}`);
-            return; // continuer
-          }
-          processedUrls.add(absoluteUrl);
-
-          // Extraire les champs optionnels
-          const publicationDate = this.extractDateField($element, tagMap);
-          const summary = this.extractField($element, tagMap, 'summary', 'text');
-
-          // Créer l’objet article
-          const article: ScrapedArticle = {
-            title,
-            url: absoluteUrl,
-            publicationDate: publicationDate || undefined,
-          };
-
-          // Ajouter le résumé (si présent)
-          if (summary) {
-            // En supposant que l’interface ScrapedArticle possède un champ summary
-            // Sinon, supprimer cette partie
-            this.logger.debug(`Extracted summary for article: ${title.substring(0, 50)}...`);
-          }
-
-          articles.push(article);
-
-        } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-          this.logger.warn(`Failed to parse article at index ${index}: ${errorMessage}`);
-          return; // dans le callback each(), utiliser return au lieu de continue
-        }
-      });
-
+      const articles: ScrapedArticle[] = this.checkScrapedArticles($, articleListSelector, tagMap, source);
       this.logger.log(`Successfully scraped ${articles.length} articles from ${source}`);
 
       return {
@@ -158,6 +105,60 @@ class Scraper implements IScraperPort {
         error: errorMessage,
       };
     }
+  }
+
+  private checkScrapedArticles = ($: any, articleListSelector: string, tagMap: Map<string, string>, source: SourceDomain) => {
+    const articles: ScrapedArticle[] = [];
+    const processedUrls: Set<string> = new Set();
+    $(articleListSelector).each((index: number, element: any) => {
+      try {
+        const $element = $(element);
+
+        // Extraire les données par champ
+        const title = this.extractField($element, tagMap, 'title', 'text');
+        const url = this.extractField($element, tagMap, 'link', 'href');
+
+        // Valider les champs obligatoires
+        if (!title || !url) {
+          this.logger.debug(`Skipping article at index ${index}: missing title [${title}] or url[${url}]`);
+          return; // continuer
+        }
+
+        // Convertir l’URL relative en URL absolue
+        const absoluteUrl = this.normalizeUrl(url, source.targetUrl);
+
+        // Vérifier les URL en double
+        if (processedUrls.has(absoluteUrl)) {
+          this.logger.debug(`Skipping duplicate URL: ${absoluteUrl}`);
+          return; // continuer
+        }
+        processedUrls.add(absoluteUrl);
+
+        // Extraire les champs optionnels
+        const publicationDate = this.extractDateField($element, tagMap);
+        const summary = this.extractField($element, tagMap, 'summary', 'text');
+
+        // Ajoute l’objet article
+        articles.push({
+          title,
+          url: absoluteUrl,
+          publicationDate: publicationDate,
+          summary: summary
+        });
+
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        this.logger.warn(`Failed to parse article at index ${index}: ${errorMessage}`);
+        return; // dans le callback each(), utiliser return au lieu de continue
+      }
+    });
+    return articles;
+  }
+
+  private checkCrawlingUrl = (source: SourceDomain, uri: string = '') => {
+    return `${source.targetUrl}/${uri.length > 0 ? ('?' + uri) : ''}`
+      .replace(Scraper.MULTIPLE_SLASHES_REGEX, '/')
+      .replace(Scraper.MULTIPLE_QUESTION_MARKS_REGEX, '?');
   }
 
   /**
@@ -267,14 +268,14 @@ class Scraper implements IScraperPort {
     tagMap: Map<string, string>,
   ): Date | null {
     try {
-      if (!tagMap.has('publication_date')) {
+      if (!tagMap.has(Scraper.PUBLICATION_DATE)) {
         return null;
       }
 
-      const selector = tagMap.get('publication_date')!;
+      const selector = tagMap.get(Scraper.PUBLICATION_DATE)!;
       let $dateElement: cheerio.Cheerio<any> | undefined;
-      if (selector && selector.startsWith("__NEXT__")) {
-        $dateElement = $element.next().find(selector.replace("__NEXT__", ""))
+      if (selector && selector.startsWith(Scraper.NEXT_FLAG)) {
+        $dateElement = $element.next().find(selector.replace(Scraper.NEXT_FLAG, ""))
       } else {
         $dateElement = $element.find(selector);
       }

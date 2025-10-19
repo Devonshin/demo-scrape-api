@@ -171,7 +171,7 @@ describe('GetArticlesUseCaseImpl', () => {
         1,
         20,
         expect.objectContaining({
-          title: 'Test',
+          title: 'test',
         }),
       );
     });
@@ -274,7 +274,7 @@ describe('GetArticlesUseCaseImpl', () => {
         15,
         expect.objectContaining({
           sourceId,
-          title: 'Important',
+          title: 'important',
           publishedAfter: expect.any(Date),
           sortField: 'createdAt',
           sortOrder: 'DESC',

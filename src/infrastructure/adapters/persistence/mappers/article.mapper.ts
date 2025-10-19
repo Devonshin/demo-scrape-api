@@ -1,23 +1,22 @@
 /**
  * @author Dongwoo
  * @date 2025-10-13
- * Article Mapper - 도메인 엔티티와 Sequelize 엔티티 간 변환
+ * Article Mapper - Conversion entre entités de domaine et entités Sequelize
  */
 import {ArticleDomain} from '../../../../domain/entities/article.domain';
 import {Article} from '../../../../entities/entity.module';
 
 /**
  * Article Mapper
- * Sequelize 엔티티와 도메인 엔티티 간 변환을 담당
+ * Responsable de la conversion entre les entités Sequelize et les entités du domaine
  */
 export class ArticleMapper {
   /**
-   * Sequelize 엔티티를 도메인 엔티티로 변환
-   * @param article Sequelize Article 엔티티
-   * @returns Article 도메인 엔티티
+   * Convertir les entités Sequelize en entités de domaine
+   * @param article Séquencer l'entité d'article
+   * @returns Entités d'article du domaine
    */
   static toDomain(article: Article): ArticleDomain {
-    // Sequelize getter를 사용하여 값 가져오기
     return new ArticleDomain(
       article.get('id'),
       article.get('sourceId'),
@@ -29,9 +28,9 @@ export class ArticleMapper {
   }
 
   /**
-   * 도메인 엔티티를 Sequelize 엔티티 생성용 데이터로 변환
-   * @param domain Article 도메인 엔티티
-   * @returns Sequelize Article 생성 데이터
+   * Convertir les entités du domaine en données pour la création d'entités Sequelize
+   * @param domain Entité du domaine de l'article
+   * @returns Données relatives à la création de l'article
    */
   static toPersistence(domain: ArticleDomain): Partial<Article> {
     return {
@@ -44,8 +43,8 @@ export class ArticleMapper {
   }
 
   /**
-   * 여러 Sequelize 엔티티를 도메인 엔티티 배열로 변환
-   * @param articles Sequelize Article 엔티티 배열
+   * Convertir plusieurs entités en un tableau d'entités de domaine
+   * @param articles Tableau des entités d'article
    * @returns Article 도메인 엔티티 배열
    */
   static toDomainList(articles: Article[]): ArticleDomain[] {

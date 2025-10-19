@@ -17,7 +17,7 @@ describe('ArticleController', () => {
   let controller: ArticleController;
   let scrapeArticlesUseCase: jest.Mocked<IScrapeArticlesUseCase>;
   let getArticlesUseCase: jest.Mocked<IGetArticlesUseCase>;
-  const bbcNewsSourceId = bufferToUuid(Buffer.from('72BDC8C6CD434E41BD7912A13E16C8B7', 'hex'));
+  const bbcNewsSourceId = bufferToUuid(Buffer.from('72BDC8C6CD434E41BD7912A13E16C8B7', 'hex'))!;
   const mockArticle = new ArticleDomain(
     uuidv4(),
     bbcNewsSourceId,

@@ -135,19 +135,18 @@ export class ArticleRepositoryImpl implements IArticleRepository {
     if (filterOptions?.title) {
       // Séparer le ou les mots-clés en mots
       const titles = filterOptions.title.toLowerCase()
-        .split(/[\s\,\.\!\?\-\(\)\[\]\{\}]+/)
+        .split(/[\s,.!?\-()\[\]{}]+/)
         .filter((word) => word.length > 1)
         .map((word) => word.substring(0, 50));
 
       if (titles.length > 0) {
-        // ✅ JOIN 방식으로 한 번에 조회 (쿼리 3회 → 1회로 감소)
         const {rows, count} = await this.articleModel.findAndCountAll({
           include: [{
             model: this.articleIndexModel,
             as: 'indexes',
             where: {
               titleFragment: {
-                [Op.in]: titles,
+                [Op.like]: titles.map((title) => `${title}%`),
               },
             },
             attributes: [],

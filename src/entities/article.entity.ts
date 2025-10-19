@@ -90,6 +90,14 @@ export class Article extends Model {
   })
   declare url: string;
 
+  /** Summary */
+  @Column({
+    type: DataType.STRING(255),
+    allowNull: true,
+    unique: false,
+  })
+  declare summary: string;
+
   /** Date de publication */
   @Column({
     type: DataType.DATE,

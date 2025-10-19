@@ -23,6 +23,7 @@ describe('ArticleController', () => {
     bbcNewsSourceId,
     'Test Article',
     'https://example.com/test-article',
+    'summary data',
     new Date(),
     new Date(),
   );

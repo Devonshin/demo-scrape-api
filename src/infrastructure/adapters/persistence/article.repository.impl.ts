@@ -318,7 +318,7 @@ export class ArticleRepositoryImpl implements IArticleRepository {
       // Séparer le titre en mots
       const words = title
         .toLowerCase()
-        .split(/[\s\,\.\!\?\-\(\)\[\]\{\}]+/)
+        .split(/[\s,.!?\-()\[\]{}]+/)
         .filter((word) =>
           word.length > 1 && ArticleRepositoryImpl.REMOVE_LETTERS.indexOf(word.toLowerCase()) === -1
         )

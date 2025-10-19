@@ -14,6 +14,7 @@ export class ArticleDomain {
     public readonly sourceId: string,
     public readonly title: string,
     public readonly url: string,
+    public readonly summary: string | null,
     public readonly publicationDate: Date | null,
     public readonly createdAt: Date,
   ) {}
@@ -27,6 +28,7 @@ export class ArticleDomain {
       sourceId: this.sourceId,
       title: this.title,
       url: this.url,
+      summary: this.summary || null,
       publicationDate: this.publicationDate,
       createdAt: this.createdAt,
     };

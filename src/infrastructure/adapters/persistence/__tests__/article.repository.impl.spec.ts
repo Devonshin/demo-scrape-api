@@ -22,6 +22,7 @@ describe('ArticleRepositoryImpl', () => {
     uuidv4(),
     'Test Article Title',
     'https://example.com/test-article',
+    'summary data',
     new Date('2025-01-13'),
     new Date(),
   );
@@ -350,6 +351,7 @@ describe('ArticleRepositoryImpl', () => {
           mockArticleDomain.sourceId,
           mockArticleDomain.title,
           mockArticleDomain.url,
+          mockArticleDomain.summary,
           mockArticleDomain.publicationDate,
           mockArticleDomain.createdAt,
         ),

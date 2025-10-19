@@ -22,6 +22,7 @@ export class ArticleMapper {
       article.get('sourceId'),
       article.get('title'),
       article.get('url'),
+      article.get('summary') ?? null,
       article.get('publicationDate') ?? null,
       article.get('createdAt'),
     );

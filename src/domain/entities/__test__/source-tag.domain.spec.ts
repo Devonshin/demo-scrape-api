@@ -306,7 +306,6 @@ describe('SourceTagDomain', () => {
         validData.className,
         validData.createdAt,
       );
-
       // Then: 필드가 변경되지 않아야 함
       expect(sourceTag.id).toBe(validData.id);
       expect(sourceTag.sourceId).toBe(validData.sourceId);

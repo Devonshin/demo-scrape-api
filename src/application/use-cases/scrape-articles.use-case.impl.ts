@@ -119,6 +119,7 @@ export class ScrapeArticlesUseCaseImpl implements IScrapeArticlesUseCase {
             source.id,
             scrapedArticle.title,
             scrapedArticle.url,
+            scrapedArticle.summary || null,
             scrapedArticle.publicationDate || null,
             existingArticle?.createdAt || new Date(),
           );

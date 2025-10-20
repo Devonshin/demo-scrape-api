@@ -1,18 +1,16 @@
 /**
  * @author Dongwoo
  * @date 2025-10-13
- * Application Module - Use Case 등록 및 의존성 주입 설정
  */
 import {Module} from '@nestjs/common';
-import {PersistenceModule} from '../infrastructure/adapters/persistence/persistence.module';
+import {PersistenceModule} from '../infrastructure/adapters/repositories/persistence.module';
 import {ScraperModule} from '../infrastructure/adapters/scraper/scraper.module';
-import {ScrapeArticlesUseCaseImpl} from './use-cases/scrape-articles.use-case.impl';
-import {GetArticlesUseCaseImpl} from './use-cases/get-articles.use-case.impl';
+import {ScrapeArticlesUseCase} from './use-cases/scrape-articles.use-case';
+import {GetArticlesUseCase} from './use-cases/get-articles.use-case';
 
 /**
  * Application Module
- * - Use Case 구현체 등록
- * - Infrastructure 모듈 import
+ * - Enregistrement d'une implémentation de Use Case
  */
 @Module({
   imports: [
@@ -21,17 +19,17 @@ import {GetArticlesUseCaseImpl} from './use-cases/get-articles.use-case.impl';
   ],
   providers: [
     {
-      provide: 'IScrapeArticlesUseCase',
-      useClass: ScrapeArticlesUseCaseImpl,
+      provide: 'ScrapeArticlesPort',
+      useClass: ScrapeArticlesUseCase,
     },
     {
-      provide: 'IGetArticlesUseCase',
-      useClass: GetArticlesUseCaseImpl,
+      provide: 'GetArticlesPort',
+      useClass: GetArticlesUseCase,
     },
   ],
   exports: [
-    'IScrapeArticlesUseCase',
-    'IGetArticlesUseCase',
+    'ScrapeArticlesPort',
+    'GetArticlesPort',
   ],
 })
 export class ApplicationModule {}

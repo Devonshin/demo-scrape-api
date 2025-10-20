@@ -5,18 +5,18 @@
  */
 import {Test, TestingModule} from '@nestjs/testing';
 import {ArticleController} from '../article.controller';
-import {IScrapeArticlesUseCase} from '../../../application/ports/in/scrape-articles.use-case';
-import {IGetArticlesUseCase} from '../../../application/ports/in/get-articles.use-case';
-import {ScrapeRequestDto} from '../../../application/dto/scrape-request.dto';
-import {GetArticlesQueryDto} from '../../../application/dto/get-articles-query.dto';
+import {ScrapeArticlesPort} from '../../../application/ports/in/scrape-articles.port';
+import {GetArticlesPort} from '../../../application/ports/in/get-articles.port';
+import {ScrapeRequestDto} from '../../../application/dtos/scrape-request.dto';
+import {GetArticlesQueryDto} from '../../../application/dtos/get-articles-query.dto';
 import {v4 as uuidv4} from 'uuid';
 import {ArticleDomain} from '../../../domain/entities/article.domain';
 import {bufferToUuid} from "../../../common/utils/uuid.util";
 
 describe('ArticleController', () => {
   let controller: ArticleController;
-  let scrapeArticlesUseCase: jest.Mocked<IScrapeArticlesUseCase>;
-  let getArticlesUseCase: jest.Mocked<IGetArticlesUseCase>;
+  let scrapeArticlesUseCase: jest.Mocked<ScrapeArticlesPort>;
+  let getArticlesUseCase: jest.Mocked<GetArticlesPort>;
   const bbcNewsSourceId = bufferToUuid(Buffer.from('72BDC8C6CD434E41BD7912A13E16C8B7', 'hex'))!;
   const mockArticle = new ArticleDomain(
     uuidv4(),
@@ -40,19 +40,19 @@ describe('ArticleController', () => {
       controllers: [ArticleController],
       providers: [
         {
-          provide: 'IScrapeArticlesUseCase',
+          provide: 'ScrapeArticlesPort',
           useValue: mockScrapeArticlesUseCase,
         },
         {
-          provide: 'IGetArticlesUseCase',
+          provide: 'GetArticlesPort',
           useValue: mockGetArticlesUseCase,
         },
       ],
     }).compile();
 
     controller = module.get<ArticleController>(ArticleController);
-    scrapeArticlesUseCase = module.get('IScrapeArticlesUseCase');
-    getArticlesUseCase = module.get('IGetArticlesUseCase');
+    scrapeArticlesUseCase = module.get('ScrapeArticlesPort');
+    getArticlesUseCase = module.get('GetArticlesPort');
   });
 
   describe('getArticles', () => {

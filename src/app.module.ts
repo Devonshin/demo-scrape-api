@@ -6,9 +6,9 @@
 import {Module} from '@nestjs/common';
 import {ConfigModule} from '@nestjs/config';
 import {HealthModule} from './health/health.module';
-import {DatabaseModule} from './database/database.module';
+import {DatabaseModule} from './common/database/database.module';
 import {PresentationModule} from './presentation/presentation.module';
-import {validate} from "./config/env.validation";
+import {validate} from "./common/config/env.validation";
 
 @Module({
   imports: [

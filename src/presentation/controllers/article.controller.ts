@@ -5,13 +5,13 @@
  */
 import {Body, Controller, Get, HttpCode, HttpStatus, Inject, Logger, Post, Query,} from '@nestjs/common';
 import {ApiOperation, ApiResponse, ApiTags,} from '@nestjs/swagger';
-import {ScrapeRequestDto} from '../../application/dto/scrape-request.dto';
-import {ScrapeResponseDto} from '../../application/dto/scrape-response.dto';
-import {GetArticlesQueryDto} from '../../application/dto/get-articles-query.dto';
-import {GetArticlesResponseDto} from '../../application/dto/get-articles-response.dto';
-import {IScrapeArticlesUseCase} from '../../application/ports/in/scrape-articles.use-case';
-import {IGetArticlesUseCase} from '../../application/ports/in/get-articles.use-case';
-import {ArticleDtoMapper} from '../../infrastructure/adapters/persistence/mappers/article-dto.mapper';
+import {ScrapeRequestDto} from '../../application/dtos/scrape-request.dto';
+import {ScrapeResponseDto} from '../../application/dtos/scrape-response.dto';
+import {GetArticlesQueryDto} from '../../application/dtos/get-articles-query.dto';
+import {GetArticlesResponseDto} from '../../application/dtos/get-articles-response.dto';
+import {ScrapeArticlesPort} from '../../application/ports/in/scrape-articles.port';
+import {GetArticlesPort} from '../../application/ports/in/get-articles.port';
+import {ArticleDtoMapper} from '../../infrastructure/adapters/repositories/mappers/article-dto.mapper';
 
 /**
  * Points de terminaison API relatifs aux articles
@@ -22,10 +22,10 @@ export class ArticleController {
   private readonly logger = new Logger(ArticleController.name);
 
   constructor(
-    @Inject('IScrapeArticlesUseCase')
-    private readonly scrapeArticlesUseCase: IScrapeArticlesUseCase,
-    @Inject('IGetArticlesUseCase')
-    private readonly getArticlesUseCase: IGetArticlesUseCase,
+    @Inject('ScrapeArticlesPort')
+    private readonly scrapeArticlesUseCase: ScrapeArticlesPort,
+    @Inject('GetArticlesPort')
+    private readonly getArticlesUseCase: GetArticlesPort,
   ) {}
 
   /**

@@ -4,8 +4,8 @@
  * 스크래퍼 모듈 - 스크래퍼 서비스들을 제공하는 모듈
  */
 import {Module} from '@nestjs/common';
-import Scraper from './scraper.service';
-import {PersistenceModule} from '../persistence/persistence.module';
+import ScraperAdapter from './scraper.adapter';
+import {PersistenceModule} from '../repositories/persistence.module';
 
 /**
  * 스크래퍼 모듈
@@ -15,11 +15,11 @@ import {PersistenceModule} from '../persistence/persistence.module';
   imports: [PersistenceModule],
   providers: [
     {
-      provide: 'IScraperPort',
-      useClass: Scraper,
+      provide: 'ScraperPort',
+      useClass: ScraperAdapter,
     },
-    Scraper,
+    ScraperAdapter,
   ],
-  exports: ['IScraperPort', Scraper],
+  exports: ['ScraperPort', ScraperAdapter],
 })
 export class ScraperModule {}

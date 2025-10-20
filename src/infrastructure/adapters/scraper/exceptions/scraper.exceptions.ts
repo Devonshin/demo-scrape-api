@@ -1,11 +1,11 @@
 /**
  * @author Devonshin
  * @date 2025-01-13
- * 스크래퍼 관련 커스텀 예외 클래스들
+ * Classes d'exceptions personnalisées spécifiques aux scrappers
  */
 
 /**
- * 스크래핑 기본 예외
+ * Récupération des exceptions par défaut
  */
 export class ScraperException extends Error {
   constructor(
@@ -20,8 +20,8 @@ export class ScraperException extends Error {
 }
 
 /**
- * 태그 설정 누락 예외
- * 필수 태그 설정이 없을 때 발생
+ * Exceptions pour les paramètres de balises manquants
+ * Se produit lorsqu'il n'y a pas de paramètres de balise requis
  */
 export class MissingTagConfigException extends ScraperException {
   constructor(
@@ -38,8 +38,8 @@ export class MissingTagConfigException extends ScraperException {
 }
 
 /**
- * 셀렉터 매칭 실패 예외
- * 셀렉터로 요소를 찾지 못했을 때 발생
+ * Exceptions relatives à l'échec de l'appariement du sélecteur
+ * Se produit lorsqu'un élément n'est pas trouvé avec le sélecteur
  */
 export class SelectorMatchException extends ScraperException {
   constructor(

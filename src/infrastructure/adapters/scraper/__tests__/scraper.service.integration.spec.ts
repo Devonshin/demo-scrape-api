@@ -1,17 +1,17 @@
 /**
  * @author Devonshin
  * @date 2025-01-13
- * Scraper 통합 테스트
+ * Test des intégrations Scraper
  */
 import {Test, TestingModule} from '@nestjs/testing';
-import Scraper from '../scraper.service';
-import {ISourceTagRepository} from '../../../../domain/repositories/source-tag.repository.interface';
+import ScraperAdapter from '../scraper.adapter';
+import {SourceTagRepositoryPort} from '../../../../application/ports/out/repositories/source-tag.repository.port';
 import {SourceDomain} from '../../../../domain/entities/source.domain';
 import {SourceTagDomain} from '../../../../domain/entities/source-tag.domain';
 
 describe('Scraper Integration Tests', () => {
-  let scraper: Scraper;
-  let mockSourceTagRepository: jest.Mocked<ISourceTagRepository>;
+  let scraper: ScraperAdapter;
+  let mockSourceTagRepository: jest.Mocked<SourceTagRepositoryPort>;
 
   beforeEach(async () => {
     // Mock SourceTagRepository 생성
@@ -22,27 +22,27 @@ describe('Scraper Integration Tests', () => {
       save: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
-    } as jest.Mocked<ISourceTagRepository>;
+    } as jest.Mocked<SourceTagRepositoryPort>;
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        Scraper,
+        ScraperAdapter,
         {
-          provide: 'ISourceTagRepository',
+          provide: 'SourceTagRepositoryPort',
           useValue: mockSourceTagRepository,
         },
       ],
     }).compile();
 
-    scraper = module.get<Scraper>(Scraper);
+    scraper = module.get<ScraperAdapter>(ScraperAdapter);
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('태그 설정이 없는 경우', () => {
-    it('태그가 없으면 에러를 반환해야 한다', async () => {
+  describe("Si aucune balise n'est définie", () => {
+    it("Si la balise n'est pas présente, nous devons renvoyer une erreur", async () => {
       // Given: 태그 설정이 없는 소스
       const source = SourceDomain.create({
         id: 'test-source-2',
@@ -56,7 +56,6 @@ describe('Scraper Integration Tests', () => {
       // When: scrapeArticles 실행
       const result = await scraper.scrapeArticles(source);
 
-      // Then: 실패 결과 반환
       expect(result.success).toBe(false);
       expect(result.error).toContain('No tags configured');
       expect(result.articles).toHaveLength(0);
@@ -64,9 +63,9 @@ describe('Scraper Integration Tests', () => {
 
   });
 
-  describe('잘못된 셀렉터 케이스', () => {
-    it('잘못된 셀렉터로도 정상적으로 처리되어야 한다', async () => {
-      // Given: 존재하지 않는 셀렉터 설정
+  describe("Cas de sélecteurs non valides", () => {
+    it("Les sélecteurs non valides doivent être traités correctement", async () => {
+      // Given: Définition d'un sélecteur inexistant
       const source = SourceDomain.create({
         id: 'test-source-4',
         title: 'Invalid Selector Source',
@@ -100,43 +99,42 @@ describe('Scraper Integration Tests', () => {
 
       mockSourceTagRepository.findBySourceId.mockResolvedValue(invalidSelectorTags);
 
-      // When & Then: 실제 HTTP 요청 시뮬레이션 필요
-      // 잘못된 셀렉터여도 빈 배열을 반환하며 정상 처리되어야 함
+      // When & Then: Nécessité de simuler des requêtes HTTP réelles
+      // Un sélecteur non valide renvoie un tableau vide et doit être traité normalement.
     });
   });
 
-  describe('canScrape 메서드 테스트', () => {
-    it('유효한 URL인 경우 true를 반환해야 한다', async () => {
-      // When: 유효한 URL 확인
-      // Note: 실제 HTTP 요청이 필요하므로 mock 또는 실제 테스트 환경 필요
+  describe("Test de la méthode canScrape", () => {
+    it("doit renvoyer true s'il s'agit d'une URL valide", async () => {
       const validUrl = 'https://google.com';
 
-      // Then: 결과는 실제 환경에서 확인
       expect(await scraper.canScrape(validUrl)).toBe(true);
     });
 
-    it('유효하지 않은 URL인 경우 false를 반환해야 한다', async () => {
-      // When: 유효하지 않은 URL 확인
+    it("Doit renvoyer false si l'URL n'est pas valide", async () => {
+      // When: Vérifier la présence d'URL non valides
       const invalidUrl = 'https://invalid-domain-that-does-not-exist-123456.com';
 
-      // Then: false 반환
+      // Then: false
       const result = await scraper.canScrape(invalidUrl);
       expect(result).toBe(false);
     });
   });
 
-  describe('URL 정규화 테스트', () => {
-    it('상대 URL을 절대 URL로 변환해야 한다', () => {
+  describe("Tester la canonisation des URL", () => {
+    it("Vous devez convertir les URL relatifs en URL absolus", () => {
+      // todo
       // Note: normalizeUrl은 private 메서드이므로 간접적으로 테스트
       // 실제로는 scrapeArticles 실행 결과로 검증
     });
 
-    it('이미 절대 URL인 경우 그대로 반환해야 한다', () => {
+    it("S'il s'agit déjà d'un URL absolu, il doit être renvoyé tel quel.", () => {
+      // todo
       // Note: 간접 테스트
     });
   });
 
-  describe('성능 테스트', () => {
+  describe("Tests de performance", () => {
     it('대량의 기사를 처리할 수 있어야 한다', async () => {
       // Given: 많은 기사가 있는 페이지 시뮬레이션
       const source = SourceDomain.create({
@@ -174,19 +172,21 @@ describe('Scraper Integration Tests', () => {
 
       // When & Then: 성능 측정
       const startTime = Date.now();
+      // todo
       // await scraper.scrapeArticles(source);
       const endTime = Date.now();
       const duration = endTime - startTime;
-
       // 성능 기준: 10초 이내
       // expect(duration).toBeLessThan(10000);
     });
   });
 
-  describe('날짜 파싱 테스트', () => {
-    it('다양한 날짜 형식을 처리할 수 있어야 한다', () => {
+  describe("Test de l'analyse de la date", () => {
+    it("Être capable de gérer une variété de formats de date", () => {
       // Note: parseDate는 private 메서드이므로 간접 테스트
       // ISO 8601, RFC 2822, timestamp 등 다양한 형식 지원
+
+      //todo
     });
   });
 });

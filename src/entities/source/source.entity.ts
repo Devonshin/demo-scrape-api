@@ -4,9 +4,9 @@
  * Entité source - une table qui stocke les informations relatives à la source de l'information.
  */
 import {Column, CreatedAt, DataType, HasMany, Model, Table, UpdatedAt} from 'sequelize-typescript';
-import {Article} from './article.entity';
+import {Article} from '../article/article.entity';
 import {SourceTag} from './source-tag.entity';
-import {bufferToUuid, uuidToBuffer} from "../common/utils/uuid.util";
+import {bufferToUuid, uuidToBuffer} from "../../common/utils/uuid.util";
 
 /**
  * Entités de la source d'information

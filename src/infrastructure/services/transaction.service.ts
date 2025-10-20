@@ -1,16 +1,14 @@
 /**
  * @author Dongwoo
  * @date 2025-10-13
- * Transaction 관리 서비스
- * 데이터베이스 트랜잭션을 시작하고 관리하는 서비스
  */
 import {Injectable} from '@nestjs/common';
 import {InjectConnection} from '@nestjs/sequelize';
 import {Sequelize, Transaction} from 'sequelize';
 
 /**
- * Transaction 관리 서비스
- * 데이터베이스 트랜잭션을 생성하고 관리
+ * Services de gestion des transactions
+ * Services qui initient et gèrent les transactions de la base de données
  */
 @Injectable()
 export class TransactionService {

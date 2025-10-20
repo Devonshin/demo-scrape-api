@@ -7,7 +7,7 @@ import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {ISourceTagRepository} from '../../../domain/repositories/source-tag.repository.interface';
 import {SourceTagDomain} from '../../../domain/entities/source-tag.domain';
-import {SourceTag} from "../../../entities/source-tag.entity";
+import {SourceTag} from "../../../entities/source/source-tag.entity";
 import {uuidToBuffer} from '../../../common/utils/uuid.util';
 
 /**

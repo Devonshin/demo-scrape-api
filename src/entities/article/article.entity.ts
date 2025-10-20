@@ -14,9 +14,9 @@ import {
   Table,
   UpdatedAt
 } from 'sequelize-typescript';
-import {Source} from './source.entity';
+import {Source} from '../source/source.entity';
 import {ArticleIndex} from './article-index.entity';
-import {bufferToUuid, uuidToBuffer} from "../common/utils/uuid.util";
+import {bufferToUuid, uuidToBuffer} from "../../common/utils/uuid.util";
 
 /**
  * Entité de l'article

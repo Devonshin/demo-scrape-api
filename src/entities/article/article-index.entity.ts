@@ -5,7 +5,7 @@
  */
 import {BelongsTo, Column, CreatedAt, DataType, ForeignKey, Model, Table} from 'sequelize-typescript';
 import {Article} from './article.entity';
-import {bufferToUuid, uuidToBuffer} from "../common/utils/uuid.util";
+import {bufferToUuid, uuidToBuffer} from "../../common/utils/uuid.util";
 
 /**
  * 기사 인덱스 엔티티

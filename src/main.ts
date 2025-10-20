@@ -43,9 +43,9 @@ async function bootstrap() {
 
   // Swagger 문서 설정
   const config = new DocumentBuilder()
-    .setTitle('Scraper API')
-    .setDescription('스크래핑 및 관리 API 문서')
-    .setVersion('1.0')
+    .setTitle("Scraper API")
+    .setDescription("Documentation sur l'API de récupération et de gestion")
+    .setVersion("1.0")
     // .addTag('articles', '기사 관리')
     // .addTag('sources', '소스 관리')
     // .addTag('scraper', '스크래핑 작업 관리')

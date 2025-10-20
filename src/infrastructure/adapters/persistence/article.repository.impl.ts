@@ -134,8 +134,7 @@ export class ArticleRepositoryImpl implements IArticleRepository {
     // Si "title" est fourni, utiliser article_indexes avec JOIN pour une recherche optimisée
     if (filterOptions?.title) {
       // Séparer le ou les mots-clés en mots
-      const titles = filterOptions.title.toLowerCase()
-        .split(/[\s,.!?\-()\[\]{}]+/)
+      const titles = this.getSplitAndLowerCase(filterOptions.title)
         .filter((word) => word.length > 1)
         .map((word) => word.substring(0, 50));
 
@@ -172,18 +171,9 @@ export class ArticleRepositoryImpl implements IArticleRepository {
           totalPages,
         };
       }
-
-      // 키워드가 비어있는 경우 빈 결과 반환
-      return {
-        items: [],
-        total: 0,
-        page,
-        pageSize,
-        totalPages: 0,
-      };
     }
 
-    // title 검색이 없는 경우 기본 조회
+    // Recherche par défaut en l'absence de recherche de titre
     const {rows, count} = await this.articleModel.findAndCountAll({
       where,
       limit: pageSize,
@@ -316,11 +306,9 @@ export class ArticleRepositoryImpl implements IArticleRepository {
   private async createArticleIndexes (articleId: string, title: string, options?: TransactionOptions): Promise<void> {
     try {
       // Séparer le titre en mots
-      const words = title
-        .toLowerCase()
-        .split(/[\s,.!?\-()\[\]{}]+/)
+      const words = this.getSplitAndLowerCase(title)
         .filter((word) =>
-          word.length > 1 && ArticleRepositoryImpl.REMOVE_LETTERS.indexOf(word.toLowerCase()) === -1
+          ArticleRepositoryImpl.REMOVE_LETTERS.indexOf(word) === -1
         )
         .map((word) =>
           word
@@ -350,5 +338,13 @@ export class ArticleRepositoryImpl implements IArticleRepository {
       this.logger.error(`Failed to create article indexes: ${errorMessage}`);
       throw error;
     }
+  }
+
+  private getSplitAndLowerCase = (txt: string) => {
+    return txt
+      .toLowerCase()
+      .split(/[\s,.!?\-()\[\]{}]+/)
+      .filter((word) => word.length > 1)
+      ;
   }
 }

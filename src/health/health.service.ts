@@ -75,7 +75,7 @@ export class HealthService {
 
   /**
    * Vérifier si l'utilisation de la mémoire dépasse le seuil
-   * @param threshold - le seuil (기본: 90%)
+   * @param threshold - le seuil (base: 90%)
    * @returns vérification du dépassement du seuil
    */
   isMemoryUsageHigh(threshold: number = 90): boolean {

@@ -7,14 +7,6 @@
 import {ScrapeRequestDto} from "../../dto/scrape-request.dto";
 
 /**
- * DTO de commande de scraping d’articles
- */
-export interface ScrapeArticlesCommand {
-  sourceId?: string; // Ne scraper qu’une source spécifique (si non spécifié, toutes les sources actives)
-  uri?: string; // append uri to target domain
-}
-
-/**
  * Résumé des résultats de scraping
  */
 export interface ScrapeResultSummary {

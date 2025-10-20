@@ -4,7 +4,7 @@
  * Source Mapper - Domain과 Persistence 엔티티 변환
  */
 import {SourceDomain} from '../../../../domain/entities/source.domain';
-import {Source} from "../../../../entities/source.entity";
+import {Source} from "../../../../entities/source/source.entity";
 
 /**
  * Source 엔티티 변환 mapper
